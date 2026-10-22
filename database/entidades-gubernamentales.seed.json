@@ -1,0 +1,1815 @@
+{
+  "version": 1,
+  "entidades": [
+    {
+      "id": "8b5aa824-0dde-f442-845a-9da4e7518811",
+      "nombre": "Acuario Nacional",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b923ed1b-f902-4e4b-ae93-adc03ad6cbbe",
+      "nombre": "Administración General del Parque Nacional Mirador Norte",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "d280748c-7f63-d544-8b65-9288e2e7ce35",
+      "nombre": "Archivo General de la Nación",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e65342b1-66ed-d542-97f2-07253edcd46f",
+      "nombre": "Autoridad Nacional de Asuntos Marítimos",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "1886b3ee-db60-c641-94cd-c892efdd054f",
+      "nombre": "Autoridad Portuaria Dominicana",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Obras Públicas y Comunicaciones",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "70ccf29c-a5fa-9d4e-8556-0c35cc2acdd1",
+      "nombre": "Biblioteca Nacional Pedro Henríquez Ureña",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e39e43e7-52b4-8543-a874-7ed01c7e960c",
+      "nombre": "Centro de Atención Integral para la Discapacidad",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f11dcd3a-d45c-ca49-8909-7366c520bb27",
+      "nombre": "Centro de Desarrollo y Competitividad Industrial",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "035010e3-c049-fd49-abee-31b0caacd2d2",
+      "nombre": "Centro de Operaciones de Emergencias",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "3b61bcbe-8bca-3b4c-ae77-676d400b9477",
+      "nombre": "Comisión de Fomento a la Tecnificación del Sistema Nacional de Riego",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "4d79d0c6-a2c7-3244-9e09-72dcb0bf043f",
+      "nombre": "Comisión Nacional de Defensa de la Competencia",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "3a59f878-c34d-e747-a6ae-dc5bbc77ad79",
+      "nombre": "Comisión Nacional de Energía",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Energía y Minas",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b81d85fb-f06a-b748-8326-f675c625917e",
+      "nombre": "Comisión Presidencial de Apoyo al Desarrollo Barrial",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "a85b0382-90e0-a849-8feb-f3c8fa03ff96",
+      "nombre": "Comisión Reguladora de Prácticas Desleales en el Comercio y Medidas de Salvaguardas",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f69e8a5a-990a-f44f-a187-8e4d55b4819a",
+      "nombre": "Comité Ejecutor de Infraestructuras de Zonas Turísticas",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Turismo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "3e7d1fed-738c-6846-a7ec-29e41f898418",
+      "nombre": "Consejo de Coordinación de la Zona Especial de Desarrollo Fronterizo",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "eef6c93f-a830-e143-8871-f6ee501834ca",
+      "nombre": "Consejo Dominicano de Pesca y Acuicultura",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "315592b8-7149-9049-82a6-6abbf77da5bc",
+      "nombre": "Consejo Nacional de Competitividad",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "017945b2-89b5-0942-8ffc-585ec33eaec4",
+      "nombre": "Consejo Nacional de Discapacidad",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e23aebc8-daeb-d841-bfd6-0fba7e9f7a36",
+      "nombre": "Consejo Nacional de Drogas",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "8646f393-a84b-2444-8b58-5ffe96afcfc2",
+      "nombre": "Consejo Nacional de Fronteras",
+      "categoria": "Órgano Colegiado",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Relaciones Exteriores",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "48e347c6-aacd-164e-926c-320642d88232",
+      "nombre": "Consejo Nacional de Investigaciones Agropecuarias y Forestales",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "53a3bf7d-1468-954b-9d4a-9737fe0a60f0",
+      "nombre": "Consejo Nacional de la Persona Envejeciente",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "d1dfb5e1-11ee-704f-9013-a111a1cdb180",
+      "nombre": "Consejo Nacional de Producción Pecuaria",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "9857ec23-4038-2342-8316-e9dfb2b12666",
+      "nombre": "Consejo Nacional de Promoción y Apoyo a la Micro, Pequeña y Mediana Empresa",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "c89d4c93-3ca6-4641-b902-567d7535a287",
+      "nombre": "Consejo Nacional de Seguridad Social",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "161c7f3d-f9e7-fe41-a839-dccf2eab1515",
+      "nombre": "Consejo Nacional de Zonas Francas de Exportación",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "14e73c9b-ccce-5b46-a16a-a5654648d413",
+      "nombre": "Consejo Nacional para el Cambio Climático y Mercado de Carbono",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "fe7a52d5-c335-644f-a5fd-4bb90f29fa89",
+      "nombre": "Consejo Nacional para el VIH y el SIDA",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ea42af49-0c04-aa42-a72d-cae8e67645b0",
+      "nombre": "Consejo Nacional para la Niñez y la Adolescencia",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "109dae49-1471-3c4b-8dd2-641391d09b67",
+      "nombre": "Consejo Nacional para la Reglamentación y Fomento de la Industria Lechera",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e5ad1c91-eac1-724c-8800-58bb9b5f6e89",
+      "nombre": "Consejo Provincial para la Administración de los Fondos Mineros Sánchez Ramírez",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Economía, Planificación y Desarrollo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "27c59ecb-7a7f-5045-83e9-4e85c2d43a51",
+      "nombre": "Consultoría Jurídica del Poder Ejecutivo",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "827c3866-d3c6-ae43-994f-c6308218de81",
+      "nombre": "Contraloría General de la República",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Control Interno",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "505f25d6-3635-084a-9826-586e68ac871d",
+      "nombre": "Corporación de Fomento de la Industria Hotelera y Desarrollo del Turismo",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Turismo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "af263f63-a5e5-564f-af9b-4037f47a7296",
+      "nombre": "Corporación del Acueducto y Alcantarillado de Boca Chica",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "556c9165-8a1d-ab44-9f02-e8c3e1065b23",
+      "nombre": "Corporación del Acueducto y Alcantarillado de la Romana",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "c681b824-48f5-c44f-baa3-7f3471f9ea4e",
+      "nombre": "Corporación del Acueducto y Alcantarillado de la Vega",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f53fef2a-9ba7-954b-a02e-2b58342cfdb3",
+      "nombre": "Corporación del Acueducto y Alcantarillado de Moca",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ac799749-106b-ca4b-a927-fec5f7862264",
+      "nombre": "Corporación del Acueducto y Alcantarillado de Monseñor Nouel",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f484a704-dbe1-8d41-b3c9-c6d0205b0300",
+      "nombre": "Corporación del Acueducto y Alcantarillado de Puerto Plata",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "04e9ed0c-018f-ca4d-bb64-c55dc08c402c",
+      "nombre": "Corporación del Acueducto y Alcantarillado de Santiago",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "084e9f55-630d-5e45-9bdc-8da1439d28b6",
+      "nombre": "Corporación del Acueducto y Alcantarillado de Santo Domingo",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "02e53e97-31f6-f14d-8a34-57743538c116",
+      "nombre": "Corporación Estatal de Radio y Televisión",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ad668956-4efc-dd4b-b53a-4590e80ea8d7",
+      "nombre": "Cuerpo Especializado de Control de Combustibles",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Defensa",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "5a7821e7-3377-124e-82cf-e16c383764fd",
+      "nombre": "Departamento Aeroportuario",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Obras Públicas y Comunicaciones",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "c4ebc717-a01e-6e42-a0e7-1885a83023af",
+      "nombre": "Dirección de Asistencia Social y Alimentación Comunitaria",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b5956d04-9a5c-9b41-a252-763588bfc8b6",
+      "nombre": "Dirección de Desarrollo Provincial",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "23d64834-948a-f849-97d8-50d8b1bfce41",
+      "nombre": "Dirección de Desarrollo Social Supérate",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "d90dd7d8-a24b-184d-8c2d-c589e3e3c740",
+      "nombre": "Dirección de Estrategia y Comunicación Gubernamental",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "372ec06d-683e-4f40-95d7-90144cde988f",
+      "nombre": "Dirección de Infraestructura Escolar",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "4fc40c0c-864f-fc4a-b334-d6272ad1b121",
+      "nombre": "Dirección de Prensa del Presidente de la República",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "9a198109-b563-7043-aec2-c1defb3d432e",
+      "nombre": "Dirección del Comisionado Nacional de Beisbol",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Deportes y Recreación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "fe1901be-5601-a849-90e0-f96927c7cb6d",
+      "nombre": "Dirección Ejecutiva del Sistema Nacional de Atención a Emergencias y Seguridad 9-1-1",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "75bf2575-72b6-604e-bbdd-d73779fa4b0b",
+      "nombre": "Dirección General de Aduanas",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "956a6309-f2a9-4941-94b0-32d7dd7f208a",
+      "nombre": "Dirección General de Alianzas Público Privadas",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "147ec503-e27a-2a40-8ea2-aef0b66eb00d",
+      "nombre": "Dirección General de Bellas Artes",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "589492c1-2a90-f948-a906-7e8b443ce69e",
+      "nombre": "Dirección General de Bienes Nacionales",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "16e090a9-19d8-a743-9d9f-3714d63fc55d",
+      "nombre": "Dirección General de Catastro Nacional",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "1487bd65-492b-1940-b07c-3854eb2b7551",
+      "nombre": "Dirección General de Cine",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "7eb27ff7-cf47-6841-9b4d-f8b9fa46a403",
+      "nombre": "Dirección General de Contabilidad Gubernamental",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "a0240fb3-621f-294d-be05-00e1478bfbd4",
+      "nombre": "Dirección General de Contrataciones Públicas",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e687602e-58fb-844b-bafe-990f1e9f6763",
+      "nombre": "Dirección General de Desarrollo de la Comunidad",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "51a303aa-002a-d645-bdbd-367f574306d1",
+      "nombre": "Dirección General de Desarrollo Fronterizo",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "eeae84c0-f48c-f147-be05-753b7e7e64ba",
+      "nombre": "Dirección General de Embellecimiento de Carreteras y Avenidas de Circunvalación del País",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Obras Públicas y Comunicaciones",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "7c629194-95f5-8646-8b54-86c1480f91f1",
+      "nombre": "Dirección General de Ética e Integridad Gubernamental",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f3894ef7-47bd-aa44-bb81-1d4445504ae0",
+      "nombre": "Dirección General de Ganadería",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ea9e93e6-0e82-1e4b-a92c-f045b342dc22",
+      "nombre": "Dirección General de Impuestos Internos",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "8ac6b51e-1951-9848-a3ee-d482cea101fc",
+      "nombre": "Dirección General de Información y Defensa de los Afiliados a la Seguridad Social",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "93e45406-89e5-b841-9c1e-06814b8e630b",
+      "nombre": "Dirección General de Jubilaciones y Pensiones a Cargo del Estado",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "cefa7e42-0cd3-3348-bb48-784c2321986a",
+      "nombre": "Dirección General de la Policía Nacional",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Interior y Policía",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "a7c43b58-c406-924c-b40e-cdc5d491fa2b",
+      "nombre": "Dirección General de Mecenazgo",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "dfe759d3-04a1-384a-bf3e-d9bbb842b278",
+      "nombre": "Dirección General de Medicamentos, Alimentos y Productos Sanitarios",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b21ec3aa-b7fc-4646-a177-a687cf6042e8",
+      "nombre": "Dirección General de Migración",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Interior y Policía",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ec660a50-4b35-8349-b611-2b95d0ba1573",
+      "nombre": "Dirección General de Minería",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Energía y Minas",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "457ac27c-d052-4b45-8093-aea39163f8cb",
+      "nombre": "Dirección General de Museos",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "21577591-2613-574d-ac46-42a84150dd3d",
+      "nombre": "Dirección General de Pasaportes",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Relaciones Exteriores",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "cb011b1c-517c-5642-a2d1-5c6814795334",
+      "nombre": "Dirección General de Persecución del Ministerio Público",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Justicia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "49163c64-fca8-804f-b4a5-ff3d3c89c792",
+      "nombre": "Dirección General de Presupuesto",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "becd5756-8dda-f348-9f52-6a678bcbc807",
+      "nombre": "Dirección General de Proyectos Estratégicos y Especiales de la Presidencia",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "13b7a4ea-2caa-bb4c-91e7-6e10c8a657aa",
+      "nombre": "Dirección General de Riesgos Agropecuarios",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "0f118e86-2f83-174c-8f2e-6e067179eabf",
+      "nombre": "Dirección General de Servicios Penitenciarios y Correccionales",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Justicia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "656e0203-954b-a948-a890-dfaebf766a97",
+      "nombre": "Dirección Nacional de Control de Drogas",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f9ff2662-5810-6a4b-a9de-33dbf265b888",
+      "nombre": "Empresa Metropolitana de Transporte, (EMT). S.A.",
+      "categoria": "Empresa Pública",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f370e897-1627-2e42-8b07-5985f4a83c08",
+      "nombre": "Fondo de Pensiones y Jubilaciones de los Trabajadores de la Construcción",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "fa487266-8659-f242-bcbf-d6e94342594a",
+      "nombre": "Fondo Especial para el Desarrollo Agropecuario",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "5ae3907b-2cf6-9f4b-9bab-561ebaca029a",
+      "nombre": "Fondo Nacional para el Medio Ambiente y Recursos Naturales",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "de5afa4b-5699-f146-a735-911ba382af4a",
+      "nombre": "Gabinete de Coordinación de Política Social",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "252ee202-0306-8343-b60d-7850882efa9c",
+      "nombre": "Industria Nacional de la Aguja",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "85e32bd8-9dba-414e-a22f-4bb39e8353e4",
+      "nombre": "Instituto Agrario Dominicano",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ecd29cf4-b6bb-3942-bd6c-b90e1e28d2c1",
+      "nombre": "Instituto Azucarero Dominicano",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f605ef8d-2400-5445-bf5b-5667013b136a",
+      "nombre": "Instituto de Auxilios",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ff96eea6-a8a6-6140-9324-d0d8d40e16fa",
+      "nombre": "Instituto de Desarrollo y Crédito Cooperativo",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "4562432f-1581-8347-a82e-2249576a9e44",
+      "nombre": "Instituto de Educación Superior en Formación Diplomática y Consular “Dr. Eduardo Latorre Rodríguez”",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "cae5e8a1-cce2-e849-9081-998d8612f9f4",
+      "nombre": "Instituto de Estabilización de Precios",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "62bbdb82-efc7-8749-9307-232269b6004e",
+      "nombre": "Instituto de Formación Turística del Caribe",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Turismo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f8ff5b2c-fcbc-bf42-b8a0-995e82a14673",
+      "nombre": "Instituto de Innovación en Biotecnología e Industria",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "fdc69955-9fb9-4148-b58f-bf22e712440c",
+      "nombre": "Instituto del Tabaco de la República Dominicana",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "fa1ecf9d-2803-d445-97b6-e08af2332576",
+      "nombre": "Instituto Dominicano de Aviación Civil",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "2ce18cee-55ad-804b-9435-927ab583efec",
+      "nombre": "Instituto Dominicano de Evaluación e Investigación de la Calidad Educativa",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "01feac52-5853-894a-91d9-fa7a1a3bff77",
+      "nombre": "Instituto Dominicano de Investigaciones Agropecuarias y Forestales",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "d3a3c8a7-f818-3443-9441-c95c1642c03f",
+      "nombre": "Instituto Dominicano de las Telecomunicaciones",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "7b7d72d4-bb46-684b-89e9-058ed09285c9",
+      "nombre": "Instituto Dominicano de Meteorología",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e8f9d3d0-16cd-404f-a0b3-0e17e9f0daec",
+      "nombre": "Instituto Dominicano de Prevención y Protección de Riesgos Laborales",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "380170e8-1272-1342-b15f-404af326a5c6",
+      "nombre": "Instituto Dominicano del Café",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ad5ad263-42f9-0e46-9610-a71a3dba74c8",
+      "nombre": "Instituto Dominicano para la Calidad",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "9bf282fe-4448-e843-bcd5-153ad4d30902",
+      "nombre": "Instituto Duartiano",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "a47cd165-1203-ca43-a349-5dacd3ee4dfa",
+      "nombre": "Instituto Geográfico Nacional José Joaquín Hungría Morell",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Economía, Planificación y Desarrollo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "295a4571-b598-634d-a39c-d02d68e41a72",
+      "nombre": "Instituto Nacional de Administración Pública",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Administración Pública",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "92937fa5-cddc-4943-a51b-ad70dfa3d3eb",
+      "nombre": "Instituto Nacional de Aguas Potables y Alcantarillados",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ecffec2a-06ec-7046-8d32-84fd9a3fc742",
+      "nombre": "Instituto Nacional de Atención Integral a la Primera Infancia",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "df0f76ac-d43d-d344-aa27-d2c0a1aa7443",
+      "nombre": "Instituto Nacional de Bienestar Estudiantil",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "3cbf51cf-c52e-9147-a912-933664772373",
+      "nombre": "Instituto Nacional de Bienestar Magisterial",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "d1a39631-f3aa-cc48-92ce-1b9653b95972",
+      "nombre": "Instituto Nacional de Ciencias Forenses",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Justicia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "6dbf362b-808a-e34d-8cce-187b005d1897",
+      "nombre": "Instituto Nacional de Coordinación de Trasplante",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "a1cd97e1-b466-6a4d-8f8d-577df985792f",
+      "nombre": "Instituto Nacional de Custodia y Administración de Bienes Incautados, Decomisados y en Extinción de Dominio",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "375dbabb-b7ea-1049-a6c5-321f1583e5c9",
+      "nombre": "Instituto Nacional de Educación Física",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b8b65d69-286c-1c41-a534-9389c3753f04",
+      "nombre": "Instituto Nacional de Formación Técnico Profesional",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "6f1f65ed-52cf-3a4e-95ae-918a2202e888",
+      "nombre": "Instituto Nacional de Formación y Capacitación del Magisterio",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "5928826c-6b95-a14e-96fb-6920f04f5940",
+      "nombre": "Instituto Nacional de la Uva",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "dadc2685-3961-8a4b-9844-74cf111dd637",
+      "nombre": "Instituto Nacional de Migración",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Interior y Policía",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "3c1a753e-6b74-3546-b7fa-8851edd00476",
+      "nombre": "Instituto Nacional de Protección de los Derechos del Consumidor",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "091c84fc-4305-354d-8e9f-b061a43f0d2d",
+      "nombre": "Instituto Nacional de Recursos Hidráulicos",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "837b8f50-81de-a740-8f46-4a96b9fa49e7",
+      "nombre": "Instituto Nacional de Tránsito y Transporte Terrestre",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Obras Públicas y Comunicaciones",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "0af7671a-1405-5f4c-bc74-764652368d3e",
+      "nombre": "Instituto para el Desarrollo del Suroeste",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Economía, Planificación y Desarrollo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b4bc1384-9fde-ad41-ae76-c876c7c40f1e",
+      "nombre": "Instituto Postal Dominicano",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Obras Públicas y Comunicaciones",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e8b45872-5b9a-744f-a14f-d07634f6ce11",
+      "nombre": "Instituto Superior de Formación Docente Salomé Ureña",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "7cd31daf-6b80-114d-b0ee-5861c73ee4bf",
+      "nombre": "Instituto Superior Especializado de Estudios Penitenciario y Correccionales",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Justicia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "2c13bb2a-a5be-114b-b294-e375d1251faf",
+      "nombre": "Instituto Técnico Superior Comunitario",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ca58f0b2-f9c9-624d-9ee5-b554b3e7e33a",
+      "nombre": "Instituto Tecnológico de las Américas",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b143bc8f-10cb-9f47-adb6-af306ecb2d51",
+      "nombre": "Jardín Botánico Nacional \"Dr. Rafael M. Moscoso\"",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "9e3b27a0-aaa6-9048-ab9b-c76aa4c696eb",
+      "nombre": "Junta de Aviación Civil",
+      "categoria": "Órgano Colegiado con Estructura Operativa",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "3e3b975b-9c08-ff43-80e3-98d024f3afe2",
+      "nombre": "Liga Municipal Dominicana",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Interior y Policía",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "3a07910c-630a-da47-b628-9b53e01e7f75",
+      "nombre": "Lotería Nacional",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "a2b5c483-2463-9442-89f7-2b36b5eb9e20",
+      "nombre": "Mercados Dominicanos de Abasto Agropecuario",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "8e97bf67-d168-ed41-ae70-79f43f8d46a9",
+      "nombre": "Ministerio Administrativo de la Presidencia",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "244639f0-987c-fd41-9d74-fd93aab028e0",
+      "nombre": "Ministerio de Administración Pública",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Administración Pública",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "cb35e722-fc0a-2149-a2d8-57679ea7dea1",
+      "nombre": "Ministerio de Agricultura",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Agricultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b21e2c4c-c3d2-ff42-864d-ce71f4809125",
+      "nombre": "Ministerio de Cultura",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Cultura",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f6c93a24-71c2-9941-8860-54ef85a0d0f7",
+      "nombre": "Ministerio de Defensa",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Defensa",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b96d8342-1c78-4d48-991c-58bc499cd8f3",
+      "nombre": "Ministerio de Deportes y Recreación",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Deportes y Recreación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "5ca45751-ad2b-444c-9c4c-8d5d9e0eb70b",
+      "nombre": "Ministerio de Educación",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "5109538a-c05d-1542-914d-bbb521520184",
+      "nombre": "Ministerio de Educación Superior, Ciencia y Tecnología",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "66502d58-ef7c-8740-a644-209273317d61",
+      "nombre": "Ministerio de Energía y Minas",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Energía y Minas",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ace22e1a-4060-9a46-ac8e-158ae0f0230d",
+      "nombre": "Ministerio de Hacienda y Economía",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "aeef6732-91e8-8340-94c1-7d2b1a4990e4",
+      "nombre": "Ministerio de Industria, Comercio y Mipymes",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "d9d9a084-5da7-4541-8c70-1ae939c23c2c",
+      "nombre": "Ministerio de Interior y Policía",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Interior y Policía",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "4875edad-5990-9949-bdd2-ef049cfd5183",
+      "nombre": "Ministerio de la Juventud",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Juventud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f668f050-5e21-f543-bcbb-24e014066e09",
+      "nombre": "Ministerio de la Mujer",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Mujer",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ae92ee68-f307-3e4f-812d-8b407912ca00",
+      "nombre": "Ministerio de la Presidencia",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "911e56bf-f2a2-0844-8c4c-393e54d06db7",
+      "nombre": "Ministerio de la Vivienda, Hábitat y Edificaciones",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Vivienda, Hábitat y Edificaciones",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b1bf76a7-5faf-9842-a48b-c4dcbce03c76",
+      "nombre": "Ministerio de Medio Ambiente y Recursos Naturales",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f139007b-a062-f948-8fe8-3e1faa221911",
+      "nombre": "Ministerio de Obras Públicas y Comunicaciones",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Obras Públicas y Comunicaciones",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "54ecedcd-355c-8d48-98cc-e6fdf89bbff0",
+      "nombre": "Ministerio de Relaciones Exteriores",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Relaciones Exteriores",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "8f6cd338-2919-c24b-be37-22e7f957a30f",
+      "nombre": "Ministerio de Salud Pública y Asistencia Social",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "43f4b50b-2ec0-3a48-9ac4-c082dea1067e",
+      "nombre": "Ministerio de Trabajo",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "da0fcb21-e872-f44d-88d1-da75cd147d97",
+      "nombre": "Ministerio de Turismo",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Turismo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "ddba2504-ba51-de47-bf88-89d4e19179a1",
+      "nombre": "Ministerio Público",
+      "categoria": "Ministerio",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Justicia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "7f5609be-81d9-af4b-a584-eba70cbc12c9",
+      "nombre": "Museo Nacional de Historia Natural \"Prof. Eugenio de Jesús Marcano\"",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "15aa684b-df1a-0b43-9618-e0c8a120ed41",
+      "nombre": "Oficina de la Defensa Civil",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b762cba1-025a-7c4a-bf22-1916fb22bbb2",
+      "nombre": "Oficina Gubernamental de Tecnologías de la Información y Comunicación",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Administración Pública",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "c897db1d-d4c6-664c-834c-274ffca01fe5",
+      "nombre": "Oficina Nacional de Derecho de Autor",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "de867d4a-960f-c14e-8b1e-d5f70825c900",
+      "nombre": "Oficina Nacional de Estadística",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Economía, Planificación y Desarrollo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "58f7444b-f548-a14c-bb88-ff48ef3a058d",
+      "nombre": "Oficina Nacional de Evaluación Sísmica y Vulnerabilidad de Infraestructura y Edificaciones",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "dd3ed846-81cb-294a-bb40-2dd33f8258b0",
+      "nombre": "Oficina Nacional de la Propiedad Industrial",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "a16d5c3b-92f7-444a-be71-b87ca2e5633f",
+      "nombre": "Organismo Dominicano de Acreditación",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Industria, Comercio y MIPYMES",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "7852ddc0-58bb-2d41-975d-0d27c22edf75",
+      "nombre": "Parque Zoológico Nacional Arq. Manuel Valverde Podesta",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Medio Ambiente y Recursos Naturales",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "dd80781d-c3b8-7543-a4c2-541580df0b58",
+      "nombre": "Programa de Medicamentos Esenciales/Central de Apoyo Logístico",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "4942732f-5910-c348-9fc3-5e267e89c695",
+      "nombre": "Servicio Geológico Nacional",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Energía y Minas",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "e8bb847b-d51f-134c-b6d0-e9e35b9ec3c9",
+      "nombre": "Servicio Nacional de Salud",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Salud",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "43f3b89e-fe8e-0342-90ba-6500d7e5e6ba",
+      "nombre": "Sistema Único de Beneficiarios",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Social",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "68d8556c-d2a1-3f4f-b8f9-dd888c70dc7e",
+      "nombre": "Superintendencia de Salud y Riesgos Laborales",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "f9cfea61-4fd3-8a43-b415-c8ccfb0b9472",
+      "nombre": "Superintendencia de Seguros",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "b6d4d75b-4d6a-4149-955a-79d0cf3e97b3",
+      "nombre": "Superintendencia del Mercado de Valores",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "4fd7a716-5281-3e4b-ba8b-97585f6a4091",
+      "nombre": "Tesorería de la Seguridad Social",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Trabajo",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "bd3724ec-810f-af4f-90fb-a1b2e4a1beb8",
+      "nombre": "Tesorería Nacional",
+      "categoria": "Organismo Desconcentrado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "1f6ed7f4-4268-1c4c-aa75-2d1d9f377839",
+      "nombre": "Unidad de Análisis Financiero",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Hacienda",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "604ea5c4-0f93-3b41-9695-22d2943ba491",
+      "nombre": "Unidad Ejecutora para la Readecuación de Barrios y Entornos",
+      "categoria": "Unidad Ejecutora (Proyecto)",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "d364be90-552d-8643-8f85-b7acc8f3d89a",
+      "nombre": "Unidad Técnica Ejecutora de Titulación de Terrenos del Estado",
+      "categoria": "Unidad Ejecutora (Proyecto)",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Presidencia",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "70e1a153-1592-dc47-ad3b-3dbacbdffe58",
+      "nombre": "Universidad Autónoma de Santo Domingo",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    },
+    {
+      "id": "9e638f92-0e30-ea4e-a748-3cd6e30591c9",
+      "nombre": "Universidad Tecnológica del Cibao Oriental",
+      "categoria": "Organismo Descentralizado Funcionalmente",
+      "poderDelEstado": "Poder Ejecutivo",
+      "sector": "Educación Superior, Ciencia y Tecnología",
+      "activa": true,
+      "fechaCreacion": "2026-10-22T19:57:28Z",
+      "fechaActualizacion": "2026-10-22T19:57:28Z"
+    }
+  ]
+}

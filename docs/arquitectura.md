@@ -1,0 +1,78 @@
+# Arquitectura del Sistema · SB Gestión de Solicitudes Internas
+
+Este documento describe las decisiones de arquitectura, diseño técnico y separación de responsabilidades adoptadas para el desarrollo de la solución empresarial de la **Superintendencia de Bancos de la República Dominicana (SB)**.
+
+---
+
+## 1. Visión General y Estilo Arquitectónico
+
+La solución implementa una **Onion Architecture** (Arquitectura Cebolla) desacoplada y orientada al dominio, estructurada en capas concéntricas con regla de dependencia hacia el centro:
+
+```mermaid
+graph TD
+    UI[Frontend: React 18 + TypeScript + Vite + Tailwind] --> Servicios[Capa Servicios: ASP.NET Core Web API 8.0]
+    Servicios --> Aplicacion[Capa Aplicación: Casos de Uso, DTOs, Servicios]
+    Infraestructura[Capa Infraestructura: EF Core, Repositorio Archivo Plano, Notificaciones] --> Aplicacion
+    Aplicacion --> Dominio[Capa Dominio: Entidades, Enums, Reglas de Negocio]
+    Infraestructura --> Dominio
+```
+
+### Proyectos de la Solución .NET 8
+
+1. **`SB.GestionSolicitudes.Dominio`** (Núcleo)
+   - Contiene los modelos de dominio (`Solicitud`, `HistorialEstado`, `Comentario`, `Notificacion`, `Usuario`, `Area`, `TipoSolicitud`, `EntidadGubernamental`).
+   - Define enumeraciones de negocio (`EstadoSolicitud`, `PrioridadSolicitud`, `RolUsuario`, `VisibilidadComentario`, `CanalNotificacion`).
+   - Contiene lógica de dominio invariante (transiciones válidas de ciclo de vida, validación de comentario obligatorio para cierre, asignación de responsables y generación del código con formato `SOL-YYYY-XXXX`).
+   - **Cero dependencias externas**.
+
+2. **`SB.GestionSolicitudes.Aplicacion`** (Casos de Uso)
+   - Define las interfaces de contratos (`ISolicitudRepositorio`, `IEntidadGubernamentalRepositorio`, `IUsuarioRepositorio`, `INotificadorSolicitud`, `IUnidadDeTrabajo`, `IGeneradorTokenJwt`, `IServicioHashContrasena`, `IUsuarioActual`, `IReloj`).
+   - Implementa los servicios de aplicación (`SolicitudServicio`, `EntidadGubernamentalServicio`, `AutenticacionServicio`, `TableroServicio`, `CatalogoServicio`, `UsuarioServicio`).
+   - Define contratos DTO de entrada y salida con validación estricta y uso del patrón **Result** (`Resultado<T>`, `ErrorAplicacion`) para evitar el uso de excepciones como control de flujo.
+
+3. **`SB.GestionSolicitudes.Infraestructura`** (Adaptadores Externos)
+   - Implementa persistencia relacional con **Entity Framework Core 8** sobre **SQLite** (`ContextoBaseDatos`, migraciones versionadas y mapeos Fluent API).
+   - Implementa el repositorio de **Base de Datos en Archivo de Texto Plano** (`RepositorioEntidadesGubernamentalesArchivo`) para las **Entidades Gubernamentales de la República Dominicana**, cumpliendo el requerimiento estricto del documento de especificaciones técnicas.
+   - Mecanismo de notificaciones multicanal extensible (`NotificadorSolicitud`, `CanalBaseDatosNotificacion`, `CanalCorreoSimuladoNotificacion`, `CanalConsolaNotificacion`).
+   - Generación y validación de tokens JWT (`GeneradorTokenJwt`) y hashing seguro mediante BCrypt.
+
+4. **`SB.GestionSolicitudes.Servicios`** (Punto de Entrada Web API)
+   - Controladores RESTful (`SolicitudesController`, `EntidadesGubernamentalesController`, `AutenticacionController`, `DashboardController`, `CatalogosController`, `UsuariosController`).
+   - Middleware global de manejo de excepciones (`ManejadorExcepcionesMiddleware`) que estandariza respuestas de error bajo RFC 7807 (Problem Details).
+   - Documentación dual con **Swagger / OpenAPI** en `/swagger` y **Scalar** en `/docs/v1`.
+   - Pipeline de logging estructurado con **Serilog** a consola y archivos rotativos (`logs/sb-gestion-solicitudes-.log`).
+   - Health check en `/salud`.
+
+5. **`SB.GestionSolicitudes.Pruebas`**
+   - 118 pruebas automatizadas: pruebas unitarias de dominio, repositorios, servicios de aplicación y pruebas de integración con `WebApplicationFactory` simulando requests HTTP reales.
+
+---
+
+## 2. Estrategia de Persistencia Dual
+
+Para satisfacer fielmente ambos pliegos de requerimientos:
+
+| Requerimiento | Documento de Origen | Solución Implementada |
+| :--- | :--- | :--- |
+| **Mantenimiento de Entidades Gubernamentales** | *API - Especificaciones Técnicas* | **Archivo de texto plano JSON** (`database/entidades-gubernamentales.json`), ubicado en el mismo proyecto, cargado inicialmente desde `ListaEntidadesGubernamentales.xlsx` y con operaciones completas de lectura, filtrado, creación, actualización y borrado concurrente con semáforo asíncrono. |
+| **Gestión de Solicitudes Internas y Auditoría** | *Prueba Técnica Full Stack* | **Base de Datos Relacional con EF Core** (`database/sb-gestion-solicitudes.db`), con migraciones versionadas, índices de cobertura para filtros/paginación, integridad referencial y scripts DDL/DML (`database/schema.sql` y `database/seed.sql`). |
+
+---
+
+## 3. Seguridad y Control de Acceso por Roles (RBAC)
+
+El sistema implementa autenticación basada en **JSON Web Tokens (JWT)** firmados con algoritmo HMAC-SHA256 y autorización en backend basada en políticas y roles:
+
+- **`Administrador`**: Acceso total al sistema, gestión de usuarios, catálogos, mantenimiento de entidades gubernamentales, y re-apertura de solicitudes cerradas.
+- **`Analista`**: Gestión de solicitudes disponibles o asignadas, cambios de estado, asignación de responsables, agregar comentarios internos y públicos, y re-apertura de solicitudes cerradas.
+- **`Solicitante`**: Registro de solicitudes, seguimiento de solicitudes propias, y comentarios públicos.
+
+---
+
+## 4. Patrones de Diseño Aplicados
+
+1. **Onion Architecture / Clean Architecture**: Desacoplamiento total entre infraestructura y lógica de negocio.
+2. **Repository & Unit of Work**: Abstracción del acceso a datos que permite alternar motores de persistencia sin alterar casos de uso.
+3. **Result Pattern**: Respuestas tipadas de éxito o error de dominio (`Resultado.Exito`, `Resultado.Falla`), reduciendo sobrecosto de excepciones.
+4. **Strategy / Channel Pattern para Notificaciones**: `INotificadorSolicitud` distribuye eventos a múltiples implementaciones de `ICanalNotificacion`. Agregar un canal de colas (RabbitMQ / Azure Service Bus) solo requiere crear una clase sin modificar el flujo de negocio.
+5. **Dependency Injection**: Inversión de control estricta con registro modular por capa (`AgregarAplicacion()`, `AgregarInfraestructura()`).

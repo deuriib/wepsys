@@ -4,8 +4,9 @@ import { BarraLateral } from './BarraLateral';
 import { BarraSuperior } from './BarraSuperior';
 
 /**
- * Marco visual de la aplicación: barra lateral oscura, encabezado blanco y un
- * lienzo gris con esquina redondeada donde viven las tarjetas de cada página.
+ * Marco visual de la aplicación: barra lateral y encabezado sobre un mismo
+ * fondo navy continuo, con un lienzo gris de esquinas superiores redondeadas
+ * donde viven las tarjetas de cada página.
  */
 export function Disposicion() {
   const [menuAbierto, setMenuAbierto] = useState(false);

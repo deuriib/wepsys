@@ -126,6 +126,10 @@ export interface FiltrosSolicitud {
   estado?: EstadoSolicitud | '';
   prioridad?: PrioridadSolicitud | '';
   areaId?: number | '';
+  solicitanteId?: number | '';
+  responsableId?: number | '';
+  fechaDesde?: string;
+  fechaHasta?: string;
   soloVencidas?: boolean;
   pagina?: number;
   tamanoPagina?: number;

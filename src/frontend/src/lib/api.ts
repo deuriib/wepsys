@@ -170,6 +170,10 @@ export function crearCliente(token: string | null): ClienteApi {
           estado: filtros.estado,
           prioridad: filtros.prioridad,
           areaId: filtros.areaId,
+          solicitanteId: filtros.solicitanteId,
+          responsableId: filtros.responsableId,
+          fechaDesde: filtros.fechaDesde,
+          fechaHasta: filtros.fechaHasta,
           soloVencidas: filtros.soloVencidas,
           pagina: filtros.pagina,
           tamanoPagina: filtros.tamanoPagina

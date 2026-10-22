@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { FormEvent } from 'react';
 import {
   Alerta,
@@ -15,13 +15,18 @@ import { InsigniaActiva } from '../componentes/Insignias';
 import { IconoBasura, IconoEditar, IconoFiltro, IconoBuscar } from '../componentes/Iconos';
 import { Paginacion } from '../componentes/Paginacion';
 import { ErrorApi } from '../lib/api';
-import type { ClienteApi } from '../lib/api';
+import {
+  useActualizarEntidadMutation,
+  useConsultarEntidades,
+  useCrearEntidadMutation,
+  useEliminarEntidadMutation,
+  useOpcionesEntidades
+} from '../lib/consultas';
 import { formatearFecha } from '../lib/formato';
 import type {
   CrearEntidad,
   EntidadGubernamental,
-  OpcionesFiltroEntidades,
-  Pagina
+  OpcionesFiltroEntidades
 } from '../lib/tipos';
 import { useSesion } from '../sesion/ContextoSesion';
 
@@ -45,7 +50,6 @@ interface PropiedadesModalEntidad {
   abierta: boolean;
   entidad: EntidadGubernamental | null;
   opciones: OpcionesFiltroEntidades | null;
-  cliente: ClienteApi;
   onCerrar: () => void;
   onGuardada: (mensaje: string) => void;
   onError: (mensaje: string) => void;
@@ -63,33 +67,25 @@ function ModalEntidad({
   abierta,
   entidad,
   opciones,
-  cliente,
   onCerrar,
   onGuardada,
   onError
 }: PropiedadesModalEntidad) {
-  const [formulario, setFormulario] = useState<CrearEntidad>(FORMULARIO_VACIO);
+  const mutacionCrear = useCrearEntidadMutation();
+  const mutacionActualizar = useActualizarEntidadMutation();
+
+  const [formulario, setFormulario] = useState<CrearEntidad>(() =>
+    entidad
+      ? {
+          nombre: entidad.nombre,
+          categoria: entidad.categoria,
+          poderDelEstado: entidad.poderDelEstado,
+          sector: entidad.sector,
+          activa: entidad.activa
+        }
+      : FORMULARIO_VACIO
+  );
   const [errores, setErrores] = useState<Record<string, string>>({});
-  const [guardando, setGuardando] = useState(false);
-
-  useEffect(() => {
-    if (!abierta) {
-      return;
-    }
-
-    setFormulario(
-      entidad
-        ? {
-            nombre: entidad.nombre,
-            categoria: entidad.categoria,
-            poderDelEstado: entidad.poderDelEstado,
-            sector: entidad.sector,
-            activa: entidad.activa
-          }
-        : FORMULARIO_VACIO
-    );
-    setErrores({});
-  }, [abierta, entidad]);
 
   const actualizar = <C extends keyof CrearEntidad>(campo: C, valor: CrearEntidad[C]) => {
     setFormulario((actual) => ({ ...actual, [campo]: valor }));
@@ -130,8 +126,6 @@ function ModalEntidad({
       return;
     }
 
-    setGuardando(true);
-
     try {
       const peticion: CrearEntidad = {
         nombre: formulario.nombre.trim(),
@@ -142,24 +136,24 @@ function ModalEntidad({
       };
 
       if (entidad) {
-        await cliente.actualizarEntidad(entidad.id, peticion);
+        await mutacionActualizar.mutateAsync({ id: entidad.id, peticion });
         onGuardada('Entidad actualizada correctamente.');
       } else {
-        await cliente.crearEntidad(peticion);
+        await mutacionCrear.mutateAsync(peticion);
         onGuardada('Entidad registrada correctamente.');
       }
     } catch (excepcion) {
       onError(excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible guardar la entidad.');
-    } finally {
-      setGuardando(false);
     }
   };
+
+  const guardando = mutacionCrear.isPending || mutacionActualizar.isPending;
 
   return (
     <Modal
       abierto={abierta}
       titulo={entidad ? 'Editar entidad' : 'Nueva entidad gubernamental'}
-      descripcion="El catálogo se almacena en el archivo de texto del proyecto."
+      descripcion="El catálogo se almacena en el archivo de texto plano del proyecto."
       onCerrar={onCerrar}
       ancho="amplio"
       pie={
@@ -254,69 +248,41 @@ function ModalEntidad({
 }
 
 export function Entidades() {
-  const { cliente, usuario } = useSesion();
+  const { usuario } = useSesion();
   const esAdministrador = usuario?.rol === 'Administrador';
 
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VACIOS);
   const [pagina, setPagina] = useState(1);
-  const [datos, setDatos] = useState<Pagina<EntidadGubernamental> | null>(null);
-  const [opciones, setOpciones] = useState<OpcionesFiltroEntidades | null>(null);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
   const [modal, setModal] = useState<{ entidad: EntidadGubernamental | null } | null>(null);
   const [porEliminar, setPorEliminar] = useState<EntidadGubernamental | null>(null);
-  const [eliminando, setEliminando] = useState(false);
 
-  useEffect(() => {
-    cliente
-      .obtenerOpcionesEntidades()
-      .then(setOpciones)
-      .catch(() => setOpciones(null));
-  }, [cliente]);
+  const { data: opciones = null } = useOpcionesEntidades();
 
-  const [recarga, setRecarga] = useState(0);
+  const filtrosConsulta = {
+    texto: filtros.texto,
+    categoria: filtros.categoria,
+    poderDelEstado: filtros.poderDelEstado,
+    sector: filtros.sector,
+    activa: (filtros.activa === '' ? '' : filtros.activa === 'true') as boolean | '' | undefined,
+    pagina,
+    tamanoPagina: 10
+  };
 
-  useEffect(() => {
-    let vigente = true;
-    setCargando(true);
+  const {
+    data: datos,
+    isLoading: cargandoInicial,
+    isFetching: cargando,
+    error: errorQuery
+  } = useConsultarEntidades(filtrosConsulta);
 
-    const temporizador = window.setTimeout(() => {
-      cliente
-        .consultarEntidades({
-          texto: filtros.texto,
-          categoria: filtros.categoria,
-          poderDelEstado: filtros.poderDelEstado,
-          sector: filtros.sector,
-          activa: filtros.activa === '' ? '' : filtros.activa === 'true',
-          pagina,
-          tamanoPagina: 10
-        })
-        .then((resultado) => {
-          if (vigente) {
-            setDatos(resultado);
-            setError(null);
-          }
-        })
-        .catch((excepcion: unknown) => {
-          if (vigente) {
-            setError(
-              excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible consultar las entidades.'
-            );
-          }
-        })
-        .finally(() => {
-          if (vigente) {
-            setCargando(false);
-          }
-        });
-    }, 250);
+  const mutacionEliminar = useEliminarEntidadMutation();
 
-    return () => {
-      vigente = false;
-      window.clearTimeout(temporizador);
-    };
-  }, [cliente, filtros, pagina, recarga]);
+  const error = errorQuery
+    ? errorQuery instanceof ErrorApi
+      ? errorQuery.message
+      : 'No fue posible consultar las entidades.'
+    : null;
 
   const actualizarFiltro = <C extends keyof Filtros>(campo: C, valor: Filtros[C]) => {
     setFiltros((actual) => ({ ...actual, [campo]: valor }));
@@ -333,18 +299,12 @@ export function Entidades() {
       return;
     }
 
-    setEliminando(true);
-
     try {
-      await cliente.eliminarEntidad(porEliminar.id);
+      await mutacionEliminar.mutateAsync(porEliminar.id);
       setPorEliminar(null);
       setAviso('Entidad eliminada del catálogo.');
-      setRecarga((valor) => valor + 1);
     } catch (excepcion) {
-      setError(excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible eliminar la entidad.');
       setPorEliminar(null);
-    } finally {
-      setEliminando(false);
     }
   };
 
@@ -356,7 +316,7 @@ export function Entidades() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-2xl text-sm text-slate-500">
-          Mantenimiento del catálogo oficial de la República Dominicana. {datos?.totalRegistros ?? '—'} registros
+          Mantenimiento del catálogo oficial de la República Dominicana persistido en archivo plano. {datos?.totalRegistros ?? '—'} registros
           {hayFiltros ? ' filtrados' : ' en total'}.
         </p>
         {esAdministrador && (
@@ -370,9 +330,14 @@ export function Entidades() {
       {error && <Alerta tono="error">{error}</Alerta>}
 
       <Tarjeta>
-        <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-sb-900">
-          <IconoFiltro className="h-4 w-4 text-acento" />
-          Filtros del catálogo
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm font-semibold text-sb-900">
+            <IconoFiltro className="h-4 w-4 text-acento" />
+            Filtros del catálogo
+          </div>
+          {cargando && !cargandoInicial && (
+            <span className="text-xs text-slate-400 animate-pulse">Actualizando catálogo…</span>
+          )}
         </div>
 
         <div className="grid gap-4 lg:grid-cols-12">
@@ -474,7 +439,7 @@ export function Entidades() {
       </Tarjeta>
 
       <Tarjeta className="overflow-hidden">
-        {cargando && !datos ? (
+        {cargandoInicial && !datos ? (
           <Cargando mensaje="Consultando el catálogo…" />
         ) : !datos || datos.elementos.length === 0 ? (
           <Vacio
@@ -577,19 +542,19 @@ export function Entidades() {
 
       {esAdministrador && (
         <>
-          <ModalEntidad
-            abierta={modal !== null}
-            entidad={modal?.entidad ?? null}
-            opciones={opciones}
-            cliente={cliente}
-            onCerrar={() => setModal(null)}
-            onGuardada={(mensaje) => {
-              setModal(null);
-              setAviso(mensaje);
-              setRecarga((valor) => valor + 1);
-            }}
-            onError={(mensaje) => setError(mensaje)}
-          />
+          {modal && (
+            <ModalEntidad
+              abierta={modal !== null}
+              entidad={modal.entidad}
+              opciones={opciones}
+              onCerrar={() => setModal(null)}
+              onGuardada={(mensaje) => {
+                setModal(null);
+                setAviso(mensaje);
+              }}
+              onError={(mensaje) => setAviso(mensaje)}
+            />
+          )}
 
           <Modal
             abierto={porEliminar !== null}
@@ -601,7 +566,12 @@ export function Entidades() {
                 <Boton variante="secundario" type="button" onClick={() => setPorEliminar(null)}>
                   Cancelar
                 </Boton>
-                <Boton variante="peligro" type="button" cargando={eliminando} onClick={() => void eliminar()}>
+                <Boton
+                  variante="peligro"
+                  type="button"
+                  cargando={mutacionEliminar.isPending}
+                  onClick={() => void eliminar()}
+                >
                   Eliminar definitivamente
                 </Boton>
               </>

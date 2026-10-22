@@ -4,6 +4,7 @@ import { useSesion } from '../sesion/ContextoSesion';
 import type { Notificacion } from '../lib/tipos';
 import { formatearFechaHora, iniciales, tituloRol } from '../lib/formato';
 import { IconoCampana, IconoChevron, IconoMenu } from './Iconos';
+import { useMarcarNotificacionLeidaMutation, useNotificaciones } from '../lib/consultas';
 
 const TITULOS: Array<[RegExp, string]> = [
   [/^\/$/, 'Inicio'],
@@ -20,29 +21,14 @@ function tituloDeRuta(ruta: string): string {
 }
 
 export function BarraSuperior({ onAbrirMenu }: { onAbrirMenu: () => void }) {
-  const { usuario, cliente } = useSesion();
+  const { usuario } = useSesion();
   const ubicacion = useLocation();
   const navegar = useNavigate();
-  const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
   const [abierto, setAbierto] = useState(false);
   const contenedor = useRef<HTMLDivElement | null>(null);
 
-  const cargarNotificaciones = async () => {
-    try {
-      const pendientes = await cliente.obtenerNotificaciones(true);
-      setNotificaciones(pendientes);
-    } catch {
-      // La campana es información complementaria: un fallo no debe romper la página.
-    }
-  };
-
-  useEffect(() => {
-    void cargarNotificaciones();
-    const intervalo = window.setInterval(() => void cargarNotificaciones(), 60_000);
-    return () => window.clearInterval(intervalo);
-    // El cliente cambia solo cuando cambia la sesión.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cliente]);
+  const { data: notificaciones = [] } = useNotificaciones(true, 60_000);
+  const mutacionMarcar = useMarcarNotificacionLeidaMutation();
 
   useEffect(() => {
     setAbierto(false);
@@ -68,8 +54,7 @@ export function BarraSuperior({ onAbrirMenu }: { onAbrirMenu: () => void }) {
 
     try {
       if (!notificacion.leida) {
-        await cliente.marcarNotificacionLeida(notificacion.id);
-        setNotificaciones((actuales) => actuales.filter((item) => item.id !== notificacion.id));
+        await mutacionMarcar.mutateAsync(notificacion.id);
       }
     } catch {
       // Si falla el marcado, igual navegamos: la acción principal es abrir el caso.

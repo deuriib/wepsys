@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FormEvent, ReactNode } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import {
@@ -14,12 +14,17 @@ import {
 import { InsigniaEstado, InsigniaPrioridad, InsigniaVencida } from '../componentes/Insignias';
 import { IconoEditar, IconoVolver } from '../componentes/Iconos';
 import { ErrorApi } from '../lib/api';
+import {
+  useAsignarResponsableMutation,
+  useCambiarEstadoMutation,
+  useComentarMutation,
+  useResponsables,
+  useSolicitud
+} from '../lib/consultas';
 import { formatearFecha, formatearFechaHora, tituloEstado } from '../lib/formato';
 import type {
   Comentario,
   EstadoSolicitud,
-  SolicitudDetalle,
-  Usuario,
   VisibilidadComentario
 } from '../lib/tipos';
 import { useSesion } from '../sesion/ContextoSesion';
@@ -51,13 +56,24 @@ function Dato({ etiqueta, children }: { etiqueta: string; children: ReactNode })
 export function DetalleSolicitud() {
   const { id } = useParams<{ id: string }>();
   const solicitudId = Number(id);
-  const { cliente, usuario } = useSesion();
+  const { usuario } = useSesion();
   const ubicacion = useLocation();
 
-  const [solicitud, setSolicitud] = useState<SolicitudDetalle | null>(null);
-  const [responsables, setResponsables] = useState<Usuario[]>([]);
-  const [cargando, setCargando] = useState(true);
-  const [errorCarga, setErrorCarga] = useState<string | null>(null);
+  const esAdministrador = usuario?.rol === 'Administrador';
+  const puedeGestionar = esAdministrador || usuario?.rol === 'Analista';
+
+  const {
+    data: solicitud,
+    isLoading: cargando,
+    error: errorQuery
+  } = useSolicitud(solicitudId);
+
+  const { data: responsables = [] } = useResponsables();
+
+  const mutacionEstado = useCambiarEstadoMutation();
+  const mutacionAsignar = useAsignarResponsableMutation();
+  const mutacionComentar = useComentarMutation();
+
   const [aviso, setAviso] = useState<Aviso | null>(() =>
     (ubicacion.state as { creada?: boolean } | null)?.creada
       ? { tono: 'exito', texto: 'La solicitud se registró correctamente.' }
@@ -69,52 +85,26 @@ export function DetalleSolicitud() {
   const [responsableId, setResponsableId] = useState('');
   const [textoComentario, setTextoComentario] = useState('');
   const [visibilidad, setVisibilidad] = useState<VisibilidadComentario>('Publica');
-  const [ocupado, setOcupado] = useState<'estado' | 'asignacion' | 'comentario' | null>(null);
   const [modalEdicion, setModalEdicion] = useState(false);
 
-  const esAdministrador = usuario?.rol === 'Administrador';
-  const puedeGestionar = esAdministrador || usuario?.rol === 'Analista';
-
-  const cargar = useCallback(async () => {
-    if (!Number.isFinite(solicitudId)) {
-      setErrorCarga('La solicitud indicada no es válida.');
-      setCargando(false);
-      return;
-    }
-
-    try {
-      const detalle = await cliente.obtenerSolicitud(solicitudId);
-      setSolicitud(detalle);
-      setNuevoEstado((actual) => actual || (detalle.estadosPermitidos[0]?.estado ?? ''));
-      setResponsableId((actual) => actual || (detalle.responsableId ? String(detalle.responsableId) : ''));
-      setErrorCarga(null);
-    } catch (excepcion) {
-      setErrorCarga(
-        excepcion instanceof ErrorApi
-          ? excepcion.estado === 404
-            ? 'La solicitud no existe o fue eliminada.'
-            : excepcion.message
-          : 'No fue posible cargar la solicitud.'
-      );
-    } finally {
-      setCargando(false);
-    }
-  }, [cliente, solicitudId]);
-
   useEffect(() => {
-    void cargar();
-  }, [cargar]);
-
-  useEffect(() => {
-    if (!puedeGestionar) {
-      return;
+    if (solicitud) {
+      if (!nuevoEstado && solicitud.estadosPermitidos.length > 0) {
+        setNuevoEstado(solicitud.estadosPermitidos[0].estado);
+      }
+      if (solicitud.responsableId) {
+        setResponsableId(String(solicitud.responsableId));
+      }
     }
+  }, [solicitud, nuevoEstado]);
 
-    cliente
-      .obtenerResponsables()
-      .then(setResponsables)
-      .catch(() => setResponsables([]));
-  }, [cliente, puedeGestionar]);
+  const errorCarga = errorQuery
+    ? errorQuery instanceof ErrorApi
+      ? errorQuery.estado === 404
+        ? 'La solicitud no existe o fue eliminada.'
+        : errorQuery.message
+      : 'No fue posible cargar la solicitud.'
+    : null;
 
   const cambiarEstado = async (evento: FormEvent<HTMLFormElement>) => {
     evento.preventDefault();
@@ -128,12 +118,14 @@ export function DetalleSolicitud() {
       return;
     }
 
-    setOcupado('estado');
     setAviso(null);
 
     try {
-      const actualizada = await cliente.cambiarEstado(solicitud.id, nuevoEstado, comentarioEstado);
-      setSolicitud(actualizada);
+      const actualizada = await mutacionEstado.mutateAsync({
+        id: solicitud.id,
+        estado: nuevoEstado,
+        comentario: comentarioEstado
+      });
       setComentarioEstado('');
       setNuevoEstado(actualizada.estadosPermitidos[0]?.estado ?? '');
       setAviso({ tono: 'exito', texto: `Estado actualizado a ${tituloEstado(actualizada.estado)}.` });
@@ -142,8 +134,6 @@ export function DetalleSolicitud() {
         tono: 'error',
         texto: excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible cambiar el estado.'
       });
-    } finally {
-      setOcupado(null);
     }
   };
 
@@ -155,20 +145,19 @@ export function DetalleSolicitud() {
       return;
     }
 
-    setOcupado('asignacion');
     setAviso(null);
 
     try {
-      const actualizada = await cliente.asignarResponsable(solicitud.id, Number(responsableId));
-      setSolicitud(actualizada);
+      const actualizada = await mutacionAsignar.mutateAsync({
+        id: solicitud.id,
+        responsableId: Number(responsableId)
+      });
       setAviso({ tono: 'exito', texto: `Solicitud asignada a ${actualizada.responsable ?? 'el responsable'}.` });
     } catch (excepcion) {
       setAviso({
         tono: 'error',
         texto: excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible asignar el responsable.'
       });
-    } finally {
-      setOcupado(null);
     }
   };
 
@@ -180,16 +169,14 @@ export function DetalleSolicitud() {
       return;
     }
 
-    setOcupado('comentario');
     setAviso(null);
 
     try {
-      const actualizada = await cliente.comentar(
-        solicitud.id,
-        textoComentario.trim(),
-        puedeGestionar ? visibilidad : 'Publica'
-      );
-      setSolicitud(actualizada);
+      await mutacionComentar.mutateAsync({
+        id: solicitud.id,
+        texto: textoComentario.trim(),
+        visibilidad: puedeGestionar ? visibilidad : 'Publica'
+      });
       setTextoComentario('');
       setAviso({ tono: 'exito', texto: 'Comentario agregado.' });
     } catch (excepcion) {
@@ -197,8 +184,6 @@ export function DetalleSolicitud() {
         tono: 'error',
         texto: excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible agregar el comentario.'
       });
-    } finally {
-      setOcupado(null);
     }
   };
 
@@ -385,7 +370,11 @@ export function DetalleSolicitud() {
                     <p className="text-xs text-slate-500">Su comentario será visible para el equipo técnico.</p>
                   )}
 
-                  <Boton type="submit" cargando={ocupado === 'comentario'} disabled={!textoComentario.trim()}>
+                  <Boton
+                    type="submit"
+                    cargando={mutacionComentar.isPending}
+                    disabled={!textoComentario.trim()}
+                  >
                     Publicar comentario
                   </Boton>
                 </div>
@@ -428,7 +417,7 @@ export function DetalleSolicitud() {
                     />
                   </Campo>
 
-                  <Boton type="submit" cargando={ocupado === 'estado'} className="w-full">
+                  <Boton type="submit" cargando={mutacionEstado.isPending} className="w-full">
                     Actualizar estado
                   </Boton>
                 </form>
@@ -457,7 +446,7 @@ export function DetalleSolicitud() {
                 <Boton
                   type="submit"
                   variante="secundario"
-                  cargando={ocupado === 'asignacion'}
+                  cargando={mutacionAsignar.isPending}
                   disabled={!responsableId}
                   className="w-full"
                 >
@@ -505,13 +494,11 @@ export function DetalleSolicitud() {
           abierta={modalEdicion}
           solicitud={solicitud}
           onCerrar={() => setModalEdicion(false)}
-          onGuardada={(actualizada) => {
-            setSolicitud(actualizada);
+          onGuardada={() => {
             setModalEdicion(false);
             setAviso({ tono: 'exito', texto: 'La solicitud se actualizó correctamente.' });
           }}
           onError={(mensaje) => setAviso({ tono: 'error', texto: mensaje })}
-          cliente={cliente}
         />
       )}
     </div>

@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { AreaTexto, Boton, Campo, Entrada, Modal, Seleccion } from '../componentes/Diseno';
 import { ErrorApi } from '../lib/api';
-import type { ClienteApi } from '../lib/api';
+import { useActualizarSolicitudMutation } from '../lib/consultas';
 import { desdeEntradaFecha, paraEntradaFecha } from '../lib/formato';
 import type { PrioridadSolicitud, SolicitudDetalle } from '../lib/tipos';
 
 interface PropiedadesModalEdicion {
   abierta: boolean;
   solicitud: SolicitudDetalle;
-  cliente: ClienteApi;
   onCerrar: () => void;
   onGuardada: (solicitud: SolicitudDetalle) => void;
   onError: (mensaje: string) => void;
@@ -33,11 +32,11 @@ const PRIORIDADES: Array<{ valor: PrioridadSolicitud; etiqueta: string }> = [
 export function ModalEdicion({
   abierta,
   solicitud,
-  cliente,
   onCerrar,
   onGuardada,
   onError
 }: PropiedadesModalEdicion) {
+  const mutacionActualizar = useActualizarSolicitudMutation();
   const [formulario, setFormulario] = useState<FormularioEdicion>({
     titulo: solicitud.titulo,
     descripcion: solicitud.descripcion,
@@ -46,7 +45,6 @@ export function ModalEdicion({
     urlEvidencia: solicitud.urlEvidencia ?? ''
   });
   const [errores, setErrores] = useState<Record<string, string>>({});
-  const [guardando, setGuardando] = useState(false);
 
   useEffect(() => {
     if (!abierta) {
@@ -99,25 +97,26 @@ export function ModalEdicion({
       return;
     }
 
-    setGuardando(true);
-
     try {
       const fechaCompromiso = desdeEntradaFecha(formulario.fechaCompromiso);
-      const actualizada = await cliente.actualizarSolicitud(solicitud.id, {
-        titulo: formulario.titulo.trim(),
-        descripcion: formulario.descripcion.trim(),
-        prioridad: formulario.prioridad,
-        fechaCompromiso: fechaCompromiso ?? undefined,
-        urlEvidencia: formulario.urlEvidencia.trim() || null
+      const actualizada = await mutacionActualizar.mutateAsync({
+        id: solicitud.id,
+        peticion: {
+          titulo: formulario.titulo.trim(),
+          descripcion: formulario.descripcion.trim(),
+          prioridad: formulario.prioridad,
+          fechaCompromiso: fechaCompromiso ?? undefined,
+          urlEvidencia: formulario.urlEvidencia.trim() || null
+        }
       });
 
       onGuardada(actualizada);
     } catch (excepcion) {
       onError(excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible actualizar la solicitud.');
-    } finally {
-      setGuardando(false);
     }
   };
+
+  const guardando = mutacionActualizar.isPending;
 
   return (
     <Modal

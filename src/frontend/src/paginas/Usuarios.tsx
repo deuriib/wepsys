@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { FormEvent } from 'react';
 import {
   Alerta,
@@ -14,7 +14,11 @@ import {
 import { InsigniaRol } from '../componentes/Insignias';
 import { IconoBuscar, IconoEditar } from '../componentes/Iconos';
 import { ErrorApi } from '../lib/api';
-import type { ClienteApi } from '../lib/api';
+import {
+  useActualizarUsuarioMutation,
+  useCrearUsuarioMutation,
+  useUsuarios
+} from '../lib/consultas';
 import { formatearFecha, tituloRol } from '../lib/formato';
 import type { RolUsuario, Usuario } from '../lib/tipos';
 import { useSesion } from '../sesion/ContextoSesion';
@@ -40,7 +44,6 @@ const FORMULARIO_VACIO: ValoresFormulario = {
 interface PropiedadesModalUsuario {
   abierta: boolean;
   usuario: Usuario | null;
-  cliente: ClienteApi;
   usuarioActualId: number;
   onCerrar: () => void;
   onGuardado: (mensaje: string) => void;
@@ -50,34 +53,26 @@ interface PropiedadesModalUsuario {
 function ModalUsuario({
   abierta,
   usuario,
-  cliente,
   usuarioActualId,
   onCerrar,
   onGuardado,
   onError
 }: PropiedadesModalUsuario) {
-  const [formulario, setFormulario] = useState<ValoresFormulario>(FORMULARIO_VACIO);
+  const mutacionCrear = useCrearUsuarioMutation();
+  const mutacionActualizar = useActualizarUsuarioMutation();
+
+  const [formulario, setFormulario] = useState<ValoresFormulario>(() =>
+    usuario
+      ? {
+          nombre: usuario.nombre,
+          correo: usuario.correo,
+          contrasena: '',
+          rol: usuario.rol,
+          activo: usuario.activo
+        }
+      : FORMULARIO_VACIO
+  );
   const [errores, setErrores] = useState<Record<string, string>>({});
-  const [guardando, setGuardando] = useState(false);
-
-  useEffect(() => {
-    if (!abierta) {
-      return;
-    }
-
-    setFormulario(
-      usuario
-        ? {
-            nombre: usuario.nombre,
-            correo: usuario.correo,
-            contrasena: '',
-            rol: usuario.rol,
-            activo: usuario.activo
-          }
-        : FORMULARIO_VACIO
-    );
-    setErrores({});
-  }, [abierta, usuario]);
 
   const actualizar = <C extends keyof ValoresFormulario>(campo: C, valor: ValoresFormulario[C]) => {
     setFormulario((actual) => ({ ...actual, [campo]: valor }));
@@ -118,19 +113,20 @@ function ModalUsuario({
       return;
     }
 
-    setGuardando(true);
-
     try {
       if (usuario) {
-        await cliente.actualizarUsuario(usuario.id, {
-          nombre: formulario.nombre.trim(),
-          rol: formulario.rol,
-          activo: formulario.activo,
-          contrasena: formulario.contrasena || undefined
+        await mutacionActualizar.mutateAsync({
+          id: usuario.id,
+          peticion: {
+            nombre: formulario.nombre.trim(),
+            rol: formulario.rol,
+            activo: formulario.activo,
+            contrasena: formulario.contrasena || undefined
+          }
         });
         onGuardado('Usuario actualizado correctamente.');
       } else {
-        await cliente.crearUsuario({
+        await mutacionCrear.mutateAsync({
           nombre: formulario.nombre.trim(),
           correo: formulario.correo.trim(),
           contrasena: formulario.contrasena,
@@ -140,22 +136,17 @@ function ModalUsuario({
       }
     } catch (excepcion) {
       onError(excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible guardar el usuario.');
-    } finally {
-      setGuardando(false);
     }
   };
 
-  const esUsuarioActual = usuario !== null && usuario.id === usuarioActualId;
+  const esUsuarioActual = usuario?.id === usuarioActualId;
+  const guardando = mutacionCrear.isPending || mutacionActualizar.isPending;
 
   return (
     <Modal
       abierto={abierta}
       titulo={usuario ? 'Editar usuario' : 'Nuevo usuario'}
-      descripcion={
-        usuario
-          ? 'Los cambios de rol se aplican la próxima vez que el usuario inicie sesión.'
-          : 'La cuenta se crea activa y puede iniciar sesión de inmediato.'
-      }
+      descripcion="Configure los datos y el rol asignado."
       onCerrar={onCerrar}
       ancho="amplio"
       pie={
@@ -177,12 +168,12 @@ function ModalUsuario({
               value={formulario.nombre}
               onChange={(evento) => actualizar('nombre', evento.target.value)}
               maxLength={150}
-              placeholder="Nombre y apellidos"
+              placeholder="Nombre y apellido"
             />
           </Campo>
 
           <Campo
-            etiqueta="Correo institucional"
+            etiqueta="Correo electrónico"
             para="usuario-correo"
             requerido={!usuario}
             error={errores.correo}
@@ -193,9 +184,9 @@ function ModalUsuario({
               type="email"
               value={formulario.correo}
               onChange={(evento) => actualizar('correo', evento.target.value)}
-              maxLength={200}
-              placeholder="usuario@sb.gob.do"
               disabled={Boolean(usuario)}
+              maxLength={200}
+              placeholder="nombre@sb.gob.do"
             />
           </Campo>
         </div>
@@ -255,44 +246,22 @@ function ModalUsuario({
 }
 
 export function Usuarios() {
-  const { cliente, usuario: usuarioActual } = useSesion();
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { usuario: usuarioActual } = useSesion();
   const [aviso, setAviso] = useState<string | null>(null);
   const [texto, setTexto] = useState('');
   const [modal, setModal] = useState<{ usuario: Usuario | null } | null>(null);
-  const [recarga, setRecarga] = useState(0);
 
-  useEffect(() => {
-    let vigente = true;
-    setCargando(true);
+  const {
+    data: usuarios = [],
+    isLoading: cargando,
+    error: errorQuery
+  } = useUsuarios();
 
-    cliente
-      .obtenerUsuarios()
-      .then((datos) => {
-        if (vigente) {
-          setUsuarios(datos);
-          setError(null);
-        }
-      })
-      .catch((excepcion: unknown) => {
-        if (vigente) {
-          setError(
-            excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible consultar los usuarios.'
-          );
-        }
-      })
-      .finally(() => {
-        if (vigente) {
-          setCargando(false);
-        }
-      });
-
-    return () => {
-      vigente = false;
-    };
-  }, [cliente, recarga]);
+  const error = errorQuery
+    ? errorQuery instanceof ErrorApi
+      ? errorQuery.message
+      : 'No fue posible consultar los usuarios.'
+    : null;
 
   const filtrados = usuarios.filter((usuario) => {
     const termino = texto.trim().toLowerCase();
@@ -417,19 +386,19 @@ export function Usuarios() {
         )}
       </Tarjeta>
 
-      <ModalUsuario
-        abierta={modal !== null}
-        usuario={modal?.usuario ?? null}
-        cliente={cliente}
-        usuarioActualId={usuarioActual?.id ?? 0}
-        onCerrar={() => setModal(null)}
-        onGuardado={(mensaje) => {
-          setModal(null);
-          setAviso(mensaje);
-          setRecarga((valor) => valor + 1);
-        }}
-        onError={(mensaje) => setError(mensaje)}
-      />
+      {modal && (
+        <ModalUsuario
+          abierta={modal !== null}
+          usuario={modal.usuario}
+          usuarioActualId={usuarioActual?.id ?? 0}
+          onCerrar={() => setModal(null)}
+          onGuardado={(mensaje) => {
+            setModal(null);
+            setAviso(mensaje);
+          }}
+          onError={(mensaje) => setAviso(mensaje)}
+        />
+      )}
     </div>
   );
 }

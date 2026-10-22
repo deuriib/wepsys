@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { Alerta, Boton, Cargando, Tarjeta, Vacio } from '../componentes/Diseno';
 import { InsigniaEstado, InsigniaPrioridad, InsigniaVencida } from '../componentes/Insignias';
 import { IconoAlerta, IconoCheck, IconoDocumento, IconoReloj } from '../componentes/Iconos';
 import { ErrorApi } from '../lib/api';
+import { useResumenTablero } from '../lib/consultas';
 import { formatearFecha, tituloEstado, tituloPrioridad } from '../lib/formato';
-import type { ConteoSolicitudes, ResumenTablero } from '../lib/tipos';
+import type { ConteoSolicitudes } from '../lib/tipos';
 import { useSesion } from '../sesion/ContextoSesion';
 
 const COLORES_ESTADO: Record<string, string> = {
@@ -101,38 +101,14 @@ function Barras({
 }
 
 export function Inicio() {
-  const { usuario, cliente } = useSesion();
-  const [resumen, setResumen] = useState<ResumenTablero | null>(null);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { usuario } = useSesion();
+  const { data: resumen, isLoading: cargando, error: errorQuery } = useResumenTablero();
 
-  useEffect(() => {
-    let vigente = true;
-    setCargando(true);
-
-    cliente
-      .obtenerResumen()
-      .then((datos) => {
-        if (vigente) {
-          setResumen(datos);
-          setError(null);
-        }
-      })
-      .catch((excepcion: unknown) => {
-        if (vigente) {
-          setError(excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible cargar el tablero.');
-        }
-      })
-      .finally(() => {
-        if (vigente) {
-          setCargando(false);
-        }
-      });
-
-    return () => {
-      vigente = false;
-    };
-  }, [cliente]);
+  const error = errorQuery
+    ? errorQuery instanceof ErrorApi
+      ? errorQuery.message
+      : 'No fue posible cargar el tablero.'
+    : null;
 
   const estados = ORDEN_ESTADOS.map(
     (clave) => resumen?.porEstado.find((item) => item.clave === clave) ?? { clave, total: 0 }
@@ -198,92 +174,83 @@ export function Inicio() {
               etiqueta="Vencidas"
               valor={resumen.vencidas}
               detalle="Compromiso superado sin cierre"
-              icono={<IconoAlerta className="h-5 w-5 text-red-600" />}
-              color="bg-red-50"
+              icono={<IconoAlerta className="h-5 w-5 text-amber-600" />}
+              color="bg-amber-50"
             />
           </div>
 
-          <div className="grid gap-6 xl:grid-cols-2">
-            <Tarjeta titulo="Solicitudes por estado" descripcion="Distribución del flujo completo.">
-              <Barras datos={estados} total={resumen.total} colores={COLORES_ESTADO} etiqueta={tituloEstado} />
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Tarjeta titulo="Distribución por estado" descripcion="Progreso actual de las solicitudes">
+              <Barras
+                datos={estados}
+                total={resumen.total}
+                colores={COLORES_ESTADO}
+                etiqueta={(clave) => tituloEstado(clave as any)}
+              />
             </Tarjeta>
-            <Tarjeta titulo="Solicitudes por prioridad" descripcion="Nivel de urgencia declarado.">
+
+            <Tarjeta titulo="Distribución por prioridad" descripcion="Clasificación según urgencia e impacto">
               <Barras
                 datos={prioridades}
                 total={resumen.total}
                 colores={COLORES_PRIORIDAD}
-                etiqueta={tituloPrioridad}
+                etiqueta={(clave) => tituloPrioridad(clave as any)}
               />
             </Tarjeta>
           </div>
 
           <Tarjeta
-            titulo="Últimas solicitudes"
-            descripcion="Los registros más recientes de su alcance."
+            titulo="Últimas solicitudes registradas"
+            descripcion="Acceso rápido a las solicitudes más recientes"
             acciones={
-              <Link to="/consulta" className="text-sm font-semibold text-acento hover:underline">
-                Ver todas
+              <Link to="/consulta" className="text-xs font-semibold text-sb-800 hover:underline">
+                Ver todas ({resumen.total})
               </Link>
             }
-            className="overflow-hidden"
           >
             {resumen.ultimasSolicitudes.length === 0 ? (
               <Vacio
-                titulo="Todavía no hay solicitudes"
-                descripcion="Cree el primer registro para comenzar a dar seguimiento."
+                titulo="No hay solicitudes"
+                descripcion="Aún no se han registrado solicitudes en el sistema."
                 accion={
                   <Link to="/crear">
-                    <Boton>Crear registro</Boton>
+                    <Boton>Registrar la primera solicitud</Boton>
                   </Link>
                 }
               />
             ) : (
-              <div className="-mx-6 -my-5 overflow-x-auto">
-                <table className="w-full min-w-[760px] text-left text-sm">
-                  <thead>
-                    <tr className="border-b border-slate-100 text-xs uppercase tracking-wide text-slate-400">
-                      <th className="px-6 py-3 font-semibold">Código</th>
-                      <th className="px-6 py-3 font-semibold">Solicitud</th>
-                      <th className="px-6 py-3 font-semibold">Estado</th>
-                      <th className="px-6 py-3 font-semibold">Prioridad</th>
-                      <th className="px-6 py-3 font-semibold">Compromiso</th>
-                      <th className="px-6 py-3 font-semibold">Responsable</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {resumen.ultimasSolicitudes.map((solicitud) => (
-                      <tr key={solicitud.id} className="transition hover:bg-slate-50/80">
-                        <td className="whitespace-nowrap px-6 py-3.5">
-                          <Link
-                            to={`/solicitudes/${solicitud.id}`}
-                            className="font-semibold text-sb-800 hover:text-acento"
-                          >
-                            {solicitud.codigo}
-                          </Link>
-                        </td>
-                        <td className="max-w-[320px] px-6 py-3.5">
-                          <Link to={`/solicitudes/${solicitud.id}`} className="block truncate text-sb-900 hover:text-acento">
-                            {solicitud.titulo}
-                          </Link>
-                          <span className="text-xs text-slate-400">{solicitud.area}</span>
-                        </td>
-                        <td className="px-6 py-3.5">
-                          <div className="flex items-center gap-2">
-                            <InsigniaEstado estado={solicitud.estado} />
-                            <InsigniaVencida vencida={solicitud.vencida} />
-                          </div>
-                        </td>
-                        <td className="px-6 py-3.5">
-                          <InsigniaPrioridad prioridad={solicitud.prioridad} />
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-3.5 text-slate-600">
-                          {formatearFecha(solicitud.fechaCompromiso)}
-                        </td>
-                        <td className="px-6 py-3.5 text-slate-600">{solicitud.responsable ?? 'Sin asignar'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="divide-y divide-slate-100">
+                {resumen.ultimasSolicitudes.map((item) => (
+                  <Link
+                    key={item.id}
+                    to={`/solicitudes/${item.id}`}
+                    className="flex flex-col gap-3 py-3.5 transition first:pt-0 last:pb-0 hover:bg-slate-50/70 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="min-w-0">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-xs font-semibold text-sb-800">{item.codigo}</span>
+                        <InsigniaEstado estado={item.estado} />
+                        <InsigniaPrioridad prioridad={item.prioridad} />
+                        <InsigniaVencida vencida={item.vencida} />
+                      </div>
+                      <p className="mt-1.5 truncate text-sm font-medium text-slate-800">{item.titulo}</p>
+                      <p className="mt-0.5 text-xs text-slate-400">
+                        {item.area} · Solicitado por <span className="text-slate-600">{item.solicitante}</span>
+                        {item.responsable && (
+                          <>
+                            {' '}· Responsable: <span className="text-slate-600">{item.responsable}</span>
+                          </>
+                        )}
+                      </p>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-slate-400 sm:flex-col sm:items-end">
+                      <span>{formatearFecha(item.fechaCreacion)}</span>
+                      <span className="text-[11px] text-slate-400">
+                        Compromiso: {formatearFecha(item.fechaCompromiso)}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
               </div>
             )}
           </Tarjeta>

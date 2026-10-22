@@ -1,72 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Alerta, Boton, Cargando, Tarjeta, Vacio } from '../componentes/Diseno';
 import { IconoCampana, IconoCheck } from '../componentes/Iconos';
 import { ErrorApi } from '../lib/api';
+import {
+  useMarcarNotificacionLeidaMutation,
+  useNotificaciones
+} from '../lib/consultas';
 import { formatearFechaHora } from '../lib/formato';
 import type { Notificacion } from '../lib/tipos';
-import { useSesion } from '../sesion/ContextoSesion';
 
 export function Notificaciones() {
-  const { cliente } = useSesion();
-  const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
   const [soloNoLeidas, setSoloNoLeidas] = useState(false);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [marcando, setMarcando] = useState<number | null>(null);
 
-  useEffect(() => {
-    let vigente = true;
-    setCargando(true);
+  const {
+    data: notificaciones = [],
+    isLoading: cargandoInicial,
+    isFetching: cargando,
+    error: errorQuery
+  } = useNotificaciones(soloNoLeidas);
 
-    cliente
-      .obtenerNotificaciones(soloNoLeidas)
-      .then((datos) => {
-        if (vigente) {
-          setNotificaciones(datos);
-          setError(null);
-        }
-      })
-      .catch((excepcion: unknown) => {
-        if (vigente) {
-          setError(
-            excepcion instanceof ErrorApi
-              ? excepcion.message
-              : 'No fue posible consultar las notificaciones.'
-          );
-        }
-      })
-      .finally(() => {
-        if (vigente) {
-          setCargando(false);
-        }
-      });
+  const mutacionMarcar = useMarcarNotificacionLeidaMutation();
 
-    return () => {
-      vigente = false;
-    };
-  }, [cliente, soloNoLeidas]);
+  const error = errorQuery
+    ? errorQuery instanceof ErrorApi
+      ? errorQuery.message
+      : 'No fue posible consultar las notificaciones.'
+    : null;
 
   const marcarLeida = async (notificacion: Notificacion) => {
     if (notificacion.leida) {
       return;
     }
 
-    setMarcando(notificacion.id);
-
     try {
-      await cliente.marcarNotificacionLeida(notificacion.id);
-      setNotificaciones((actuales) =>
-        soloNoLeidas
-          ? actuales.filter((item) => item.id !== notificacion.id)
-          : actuales.map((item) => (item.id === notificacion.id ? { ...item, leida: true } : item))
-      );
-    } catch (excepcion) {
-      setError(
-        excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible marcar la notificación.'
-      );
-    } finally {
-      setMarcando(null);
+      await mutacionMarcar.mutateAsync(notificacion.id);
+    } catch {
+      // Ignorar fallo de red puntual
     }
   };
 
@@ -107,7 +77,7 @@ export function Notificaciones() {
         titulo={soloNoLeidas ? 'Notificaciones sin leer' : 'Historial de notificaciones'}
         descripcion={`${notificaciones.length} aviso${notificaciones.length === 1 ? '' : 's'} en esta vista.`}
       >
-        {cargando && notificaciones.length === 0 ? (
+        {cargandoInicial && notificaciones.length === 0 ? (
           <Cargando mensaje="Consultando notificaciones…" />
         ) : notificaciones.length === 0 ? (
           <Vacio
@@ -130,7 +100,7 @@ export function Notificaciones() {
             }
           />
         ) : (
-          <ul className={`divide-y divide-slate-100 ${cargando ? 'opacity-60' : ''}`}>
+          <ul className={`divide-y divide-slate-100 ${cargando && !cargandoInicial ? 'opacity-70' : ''}`}>
             {notificaciones.map((notificacion) => (
               <li
                 key={notificacion.id}
@@ -183,7 +153,7 @@ export function Notificaciones() {
                     <Boton
                       variante="fantasma"
                       tamano="sm"
-                      cargando={marcando === notificacion.id}
+                      cargando={mutacionMarcar.isPending && mutacionMarcar.variables === notificacion.id}
                       onClick={() => void marcarLeida(notificacion)}
                       icono={<IconoCheck className="h-4 w-4" />}
                     >

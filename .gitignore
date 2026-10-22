@@ -22,8 +22,18 @@ node_modules/
 # Database transient files
 *.db-shm
 *.db-wal
+*.db
 
 # OS files
 Thumbs.db
 [Dd]esktop.ini
 .DS_Store
+
+.opencode/
+.agents/
+
+/AGENTS.md
+
+docs/*
+!docs/**/*.md
+/src/backend/SB.GestionSolicitudes.Servicios/logs

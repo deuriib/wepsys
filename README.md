@@ -65,11 +65,41 @@ La plataforma implementa un sistema empresarial para registrar, dar seguimiento,
 
 ## 🚀 Requisitos Previos
 
+- [mise](https://mise.jdx.dev/) (recomendado para instalar las versiones de herramientas fijadas y ejecutar las tareas del proyecto)
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js 18+](https://nodejs.org/) (recomendado v20 o v24)
 - Git
 - **SQL Server 2022**: basta el contenedor oficial `mcr.microsoft.com/mssql/server:2022-latest` que levanta Compose; también sirve cualquier instancia accesible por cadena de conexión.
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) con Compose v2.24+ *(para el SQL Server local, la ejecución containerizada y las pruebas de integración, que levantan su propio contenedor)*
+
+---
+
+## 🧰 Entorno de Desarrollo con mise
+
+Desde la raíz del repositorio, instala las versiones exactas declaradas en `mise.toml` y prepara las dependencias:
+
+```bash
+mise install
+mise run setup
+```
+
+`mise run setup` restaura la solución .NET e instala las dependencias del frontend mediante `npm ci`, respetando `package-lock.json`. mise también configura opciones de .NET para evitar telemetría y mensajes de bienvenida durante las tareas.
+
+| Tarea | Descripción |
+| :--- | :--- |
+| `mise run backend:build` | Restaura y compila la solución .NET |
+| `mise run backend:test` | Ejecuta la suite .NET; las pruebas de integración requieren Docker |
+| `mise run backend:run` | Inicia la API; requiere una cadena de conexión válida a SQL Server |
+| `mise run frontend:dev` | Inicia Vite en modo desarrollo |
+| `mise run frontend:typecheck` | Valida los tipos de TypeScript |
+| `mise run frontend:build` | Valida TypeScript y genera el frontend de producción |
+| `mise run docker:arriba` | Construye e inicia el stack de Compose |
+| `mise run docker:desarrollo` | Inicia el stack con recarga en caliente |
+| `mise run docker:pruebas` | Ejecuta las pruebas en contenedores |
+| `mise run docker:abajo` | Detiene los contenedores sin borrar los volúmenes |
+| `mise run docker:limpiar` | **Destructiva:** detiene los contenedores y elimina los volúmenes de datos |
+
+Las tareas Docker que utilizan Compose requieren un archivo `.env` creado a partir de `.env.example`. `mise tasks` muestra las tareas disponibles. También se pueden seguir usando directamente los comandos documentados en las secciones siguientes.
 
 ---
 

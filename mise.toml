@@ -2,6 +2,53 @@
 dotnet = "8.0.426"
 node = "24.22.1"
 
+[env]
+DOTNET_CLI_TELEMETRY_OPTOUT = "1"
+DOTNET_NOLOGO = "1"
+DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "1"
+
+[tasks.setup]
+description = "Restore backend tools and install locked frontend dependencies"
+depends = ["backend:restore", "frontend:install"]
+
+[tasks."backend:restore"]
+description = "Restore the .NET solution dependencies"
+run = "dotnet restore src/backend/SB.GestionSolicitudes.sln"
+
+[tasks."backend:build"]
+description = "Build the .NET solution"
+depends = ["backend:restore"]
+run = "dotnet build src/backend/SB.GestionSolicitudes.sln --no-restore"
+
+[tasks."backend:test"]
+description = "Run the .NET test suite (requires Docker for integration tests)"
+depends = ["backend:restore"]
+run = "dotnet test src/backend/SB.GestionSolicitudes.sln --no-restore"
+
+[tasks."backend:run"]
+description = "Run the API locally (requires a configured SQL Server connection)"
+run = "dotnet run --project src/backend/SB.GestionSolicitudes.Servicios"
+
+[tasks."frontend:install"]
+description = "Install the frontend dependencies from package-lock.json"
+dir = "src/frontend"
+run = "npm ci"
+
+[tasks."frontend:dev"]
+description = "Start the Vite development server"
+dir = "src/frontend"
+run = "npm run dev"
+
+[tasks."frontend:build"]
+description = "Type-check and build the frontend for production"
+dir = "src/frontend"
+run = "npm run build"
+
+[tasks."frontend:typecheck"]
+description = "Run the frontend TypeScript type check"
+dir = "src/frontend"
+run = "npm run typecheck"
+
 [tasks."docker:arriba"]
 description = "Build and start the production-like stack (API + nginx-served web)"
 run = "docker compose up --build -d"

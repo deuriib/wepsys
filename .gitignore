@@ -38,9 +38,7 @@ Thumbs.db
 .opencode/
 .agents/
 
-# Ignore documentation files except for Markdown
-docs/*
-!docs/**/*.md
+# Logs
 /src/backend/SB.GestionSolicitudes.Servicios/logs
 
 # Mise (mise-en-place) configuration files

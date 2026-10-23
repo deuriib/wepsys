@@ -569,6 +569,7 @@ export function Entidades() {
   const [filtros, setFiltros] = useState<Filtros>(FILTROS_VACIOS);
   const [pagina, setPagina] = useState(1);
   const [aviso, setAviso] = useState<string | null>(null);
+  const [errorEliminacion, setErrorEliminacion] = useState<string | null>(null);
   const [modal, setModal] = useState<{ entidad: EntidadGubernamental | null } | null>(null);
   const [modalCatalogos, setModalCatalogos] = useState(false);
   const [porEliminar, setPorEliminar] = useState<EntidadGubernamental | null>(null);
@@ -618,9 +619,12 @@ export function Entidades() {
     try {
       await mutacionEliminar.mutateAsync(porEliminar.id);
       setPorEliminar(null);
+      setErrorEliminacion(null);
       setAviso('Entidad eliminada del catálogo.');
     } catch (excepcion) {
-      setPorEliminar(null);
+      setErrorEliminacion(
+        excepcion instanceof ErrorApi ? excepcion.message : 'No fue posible eliminar la entidad.'
+      );
     }
   };
 
@@ -832,7 +836,11 @@ export function Entidades() {
                             </button>
                             <button
                               type="button"
-                              onClick={() => setPorEliminar(entidad)}
+                              onClick={() => {
+                                setAviso(null);
+                                setErrorEliminacion(null);
+                                setPorEliminar(entidad);
+                              }}
                               className="rounded-lg p-1.5 text-slate-500 transition hover:bg-red-50 hover:text-red-600"
                               aria-label={`Eliminar ${entidad.nombre}`}
                               title="Eliminar"
@@ -890,10 +898,20 @@ export function Entidades() {
             abierto={porEliminar !== null}
             titulo="Eliminar entidad"
             descripcion="Esta acción no se puede deshacer."
-            onCerrar={() => setPorEliminar(null)}
+            onCerrar={() => {
+              setPorEliminar(null);
+              setErrorEliminacion(null);
+            }}
             pie={
               <>
-                <Boton variante="secundario" type="button" onClick={() => setPorEliminar(null)}>
+                <Boton
+                  variante="secundario"
+                  type="button"
+                  onClick={() => {
+                    setPorEliminar(null);
+                    setErrorEliminacion(null);
+                  }}
+                >
                   Cancelar
                 </Boton>
                 <Boton
@@ -911,6 +929,7 @@ export function Entidades() {
               Se eliminará <strong className="text-sb-900">{porEliminar?.nombre}</strong> del catálogo de
               entidades gubernamentales.
             </p>
+            {errorEliminacion && <Alerta tono="error">{errorEliminacion}</Alerta>}
           </Modal>
         </>
       )}

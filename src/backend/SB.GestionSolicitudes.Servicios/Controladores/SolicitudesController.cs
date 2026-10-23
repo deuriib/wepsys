@@ -165,7 +165,7 @@ public sealed class SolicitudesController : ControllerBase
     /// <param name="peticion">Texto y visibilidad del comentario.</param>
     /// <param name="cancellationToken">Token de cancelación de la petición.</param>
     [HttpPost("{id:int}/comentarios")]
-    [ProducesResponseType(typeof(SolicitudDetalleDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SolicitudDetalleDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -175,6 +175,9 @@ public sealed class SolicitudesController : ControllerBase
         CancellationToken cancellationToken)
     {
         var resultado = await _solicitudes.AgregarComentarioAsync(id, peticion, cancellationToken);
-        return resultado.ComoRespuestaHttp(this);
+
+        return resultado.Exito
+            ? StatusCode(StatusCodes.Status201Created, resultado.Valor)
+            : resultado.ComoRespuestaHttp(this);
     }
 }

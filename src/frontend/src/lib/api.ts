@@ -24,7 +24,7 @@ import type {
 
 const BASE = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
 
-/** Error de negocio devuelto por la API (RFC 7807 + codigo estable). */
+/** Error de negocio devuelto por la API (RFC 9457 Problem Details + codigo estable). */
 export class ErrorApi extends Error {
   readonly estado: number;
   readonly codigo?: string;
@@ -97,7 +97,7 @@ async function solicitar<T>(ruta: string, token: string | null, opciones: Reques
       detail?: string;
       title?: string;
       codigo?: string;
-      errores?: Record<string, string[]>;
+      errors?: Record<string, string[]>;
       trazabilidad?: string;
     };
 
@@ -105,7 +105,7 @@ async function solicitar<T>(ruta: string, token: string | null, opciones: Reques
       respuesta.status,
       problema.detail ?? problema.title ?? 'No fue posible completar la operación.',
       problema.codigo,
-      problema.errores,
+      problema.errors,
       problema.trazabilidad
     );
   }

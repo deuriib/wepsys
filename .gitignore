@@ -24,6 +24,11 @@ node_modules/
 *.db-wal
 *.db
 
+# Local Docker Compose environment (may hold JWT secrets)
+.env
+.env.*
+!.env.example
+
 # OS files
 Thumbs.db
 [Dd]esktop.ini

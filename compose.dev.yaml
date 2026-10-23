@@ -1,0 +1,55 @@
+# Development environment with hot reload:
+#   docker compose -f compose.yaml -f compose.dev.yaml up --build
+# Requires Docker Compose v2.24+ because the web ports are replaced with `!override`.
+services:
+  api:
+    build:
+      target: desarrollo
+    # Separate tag: building the dev overlay must not overwrite the production image.
+    image: sb-gestion-solicitudes/api:desarrollo
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      DOTNET_WATCH_RESTART_ON_RUDE_EDIT: "true"
+    # Source and data come from the host, so edits reload and the SQLite file is
+    # the same one the local `dotnet run` flow uses. The anonymous volumes below
+    # shadow every bin/obj folder: the container restores its own Linux assets
+    # and never overwrites the Windows build output living on the host.
+    volumes:
+      - ./src/backend:/app/src/backend
+      - ./database:/app/database
+      - /app/src/backend/SB.GestionSolicitudes.Dominio/bin
+      - /app/src/backend/SB.GestionSolicitudes.Dominio/obj
+      - /app/src/backend/SB.GestionSolicitudes.Aplicacion/bin
+      - /app/src/backend/SB.GestionSolicitudes.Aplicacion/obj
+      - /app/src/backend/SB.GestionSolicitudes.Infraestructura/bin
+      - /app/src/backend/SB.GestionSolicitudes.Infraestructura/obj
+      - /app/src/backend/SB.GestionSolicitudes.Servicios/bin
+      - /app/src/backend/SB.GestionSolicitudes.Servicios/obj
+      - /app/src/backend/SB.GestionSolicitudes.Pruebas/bin
+      - /app/src/backend/SB.GestionSolicitudes.Pruebas/obj
+    healthcheck:
+      start_period: 120s
+      retries: 10
+
+  web:
+    build:
+      target: desarrollo
+    image: sb-gestion-solicitudes/web:desarrollo
+    environment:
+      # Vite forwards /api and /salud to the API container instead of localhost.
+      VITE_PROXY_TARGET: http://api:8080
+    ports: !override
+      - "${PUERTO_WEB_DESARROLLO:-5173}:5173"
+    volumes:
+      - ./src/frontend:/app
+      # The image installs the Linux dependencies; the host node_modules (Windows)
+      # must never shadow them. Anonymous on purpose: a rebuild starts from the
+      # dependencies baked into the new image.
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1:5173/"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s

@@ -1,0 +1,16 @@
+# Runs the 118 automated tests inside the SDK image, with no local toolchain:
+#   docker compose -f compose.test.yaml run --rm pruebas
+# Exit code is the test runner's exit code, so it drops straight into CI.
+name: sb-gestion-solicitudes-pruebas
+
+services:
+  pruebas:
+    build:
+      context: .
+      dockerfile: src/backend/SB.GestionSolicitudes.Servicios/Dockerfile
+      target: pruebas
+    image: sb-gestion-solicitudes/pruebas:${ETIQUETA_IMAGEN:-local}
+    environment:
+      ASPNETCORE_ENVIRONMENT: Testing
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"

@@ -1,0 +1,59 @@
+# Production-like environment: `docker compose up --build`.
+# The API keeps its SQLite file and its plain-text catalog in the `datos-api`
+# volume, and nginx serves the React bundle on the same origin.
+name: sb-gestion-solicitudes
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/backend/SB.GestionSolicitudes.Servicios/Dockerfile
+      target: final
+      args:
+        CONFIGURACION: ${CONFIGURACION_COMPILACION:-Release}
+    image: sb-gestion-solicitudes/api:${ETIQUETA_IMAGEN:-local}
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ASPNETCORE_URLS: http://+:8080
+      # Production refuses to start without a key of at least 32 characters.
+      # Override it from your own `.env`; the fallback is a local demo value.
+      Jwt__ClaveSecreta: ${JWT_CLAVE_SECRETA:-clave-solo-para-docker-local-0123456789abcdef}
+      Cors__Origenes: ${CORS_ORIGENES:-http://localhost:8080,http://localhost:5173}
+    ports:
+      - "${PUERTO_API:-5080}:8080"
+    volumes:
+      - datos-api:/app/database
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8080/salud"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    restart: unless-stopped
+    networks:
+      - sb
+
+  web:
+    build:
+      context: src/frontend
+      dockerfile: Dockerfile
+      target: final
+      args:
+        VITE_API_URL: ${VITE_API_URL:-}
+    image: sb-gestion-solicitudes/web:${ETIQUETA_IMAGEN:-local}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${PUERTO_WEB:-8080}:80"
+    restart: unless-stopped
+    networks:
+      - sb
+
+volumes:
+  datos-api:
+    name: sb-gestion-solicitudes-datos
+
+networks:
+  sb:
+    name: sb-gestion-solicitudes

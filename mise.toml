@@ -1,3 +1,23 @@
 [tools]
 dotnet = "8.0.426"
 node = "24.22.1"
+
+[tasks."docker:arriba"]
+description = "Build and start the production-like stack (API + nginx-served web)"
+run = "docker compose up --build -d"
+
+[tasks."docker:desarrollo"]
+description = "Start the hot-reload development stack (dotnet watch + Vite)"
+run = "docker compose -f compose.yaml -f compose.dev.yaml up --build"
+
+[tasks."docker:pruebas"]
+description = "Run the automated test suite inside a container"
+run = "docker compose -f compose.test.yaml run --rm pruebas"
+
+[tasks."docker:abajo"]
+description = "Stop and remove the containers (data volume is preserved)"
+run = "docker compose down"
+
+[tasks."docker:limpiar"]
+description = "Stop the containers and delete the persisted data volume"
+run = "docker compose down -v"

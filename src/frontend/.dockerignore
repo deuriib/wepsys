@@ -1,0 +1,7 @@
+# Build context: src/frontend.
+node_modules
+dist
+*.tsbuildinfo
+.vite
+Dockerfile
+.dockerignore

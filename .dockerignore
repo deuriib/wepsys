@@ -1,0 +1,36 @@
+# Build context: repository root.
+# Keep the image slim and reproducible: no VCS data, local artifacts, tooling
+# folders, generated databases or the frontend (it has its own Dockerfile).
+.git
+.gitignore
+.gitattributes
+.dockerignore
+.vs
+.vscode
+.agents
+.opencode
+mise.toml
+README.md
+AGENTS.md
+docs
+e2e
+
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/logs
+**/*.tsbuildinfo
+**/*.user
+
+# Generated at runtime from the seed; never bake local data into the image.
+database/entidades-gubernamentales.json
+database/*.db
+database/*.db-shm
+database/*.db-wal
+
+compose*.yaml
+.env
+.env.*
+src/frontend/Dockerfile
+src/frontend/nginx.conf

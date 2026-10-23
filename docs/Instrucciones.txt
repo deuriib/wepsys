@@ -1,0 +1,9 @@
+El candidato debe realizar la prueba descrita en el archivo [ Prueba tecnica-2.pdf ] y debe seguir las normativas de desarrollo en el archivo [ ESPECIFICACIONES TECNICAS.PDF ] debe tomar en cuenta que tambien es parte de la prueba
+
+- La API debe incluir un mantenimiento que contenga un listado de las entidades gubernamentales de la República Dominicana (archivo de excel [ ListaEntidadesGubernamentales.xlsx ])
+- Las respuestas de preguntas de conceptualización deben ser respondidas en un correo.
+- Se agrego una capa visual [maqueta.jpg] que el objetivo es que sea realizado bajo la arquitectura de su preferencia y el CRUD sea desde la visual, deben utilizar los colores de referencia e iconos para la parte visual:
+•	Color azul: rgba(13, 48, 72, .9)
+•	Color gris: rgba(237, 240, 247)
+•	Icono: adjunto en svg
+•	El logo puede ser tomado desde el portal web de la superintendencia de bancos en el header o desde el archivo de recursos

@@ -34,13 +34,17 @@ Thumbs.db
 [Dd]esktop.ini
 .DS_Store
 
+# Miscellaneous
 .opencode/
 .agents/
 
-/AGENTS.md
-
+# Ignore documentation files except for Markdown
 docs/*
 !docs/**/*.md
 /src/backend/SB.GestionSolicitudes.Servicios/logs
 
+# Mise (mise-en-place) configuration files
 mise.**.toml
+
+# GitHub Actions
+.github/agents

@@ -12,8 +12,8 @@ namespace SB.GestionSolicitudes.Servicios.Controladores;
 /// </summary>
 [ApiController]
 [Route("api/usuarios")]
-[Authorize]
 [Produces("application/json")]
+[Authorize]
 public sealed class UsuariosController : ControllerBase
 {
     private readonly UsuarioServicio _usuarios;
@@ -30,7 +30,7 @@ public sealed class UsuariosController : ControllerBase
     [HttpGet]
     [Authorize(Roles = "Administrador")]
     [ProducesResponseType(typeof(IReadOnlyList<UsuarioDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> ObtenerTodos(CancellationToken cancellationToken)
     {
         var resultado = await _usuarios.ObtenerTodosAsync(cancellationToken);
@@ -44,7 +44,7 @@ public sealed class UsuariosController : ControllerBase
     [HttpGet("responsables")]
     [Authorize(Roles = "Administrador,Analista")]
     [ProducesResponseType(typeof(IReadOnlyList<UsuarioDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> ObtenerResponsables(CancellationToken cancellationToken)
     {
         var resultado = await _usuarios.ObtenerResponsablesDisponiblesAsync(cancellationToken);
@@ -59,9 +59,9 @@ public sealed class UsuariosController : ControllerBase
     [HttpPost]
     [Authorize(Roles = "Administrador")]
     [ProducesResponseType(typeof(UsuarioDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Crear(
         [FromBody] CrearUsuarioRequest peticion,
         CancellationToken cancellationToken)
@@ -82,8 +82,8 @@ public sealed class UsuariosController : ControllerBase
     [HttpPatch("{id:int}")]
     [Authorize(Roles = "Administrador")]
     [ProducesResponseType(typeof(UsuarioDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status403Forbidden)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Actualizar(
         int id,
         [FromBody] ActualizarUsuarioRequest peticion,

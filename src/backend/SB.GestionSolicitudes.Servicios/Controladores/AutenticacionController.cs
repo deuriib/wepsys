@@ -30,8 +30,8 @@ public sealed class AutenticacionController : ControllerBase
     [HttpPost("login")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(RespuestaAutenticacionDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> IniciarSesion(
         [FromBody] LoginRequest peticion,
         CancellationToken cancellationToken)

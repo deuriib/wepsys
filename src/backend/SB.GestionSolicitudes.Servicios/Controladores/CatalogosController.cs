@@ -12,8 +12,8 @@ namespace SB.GestionSolicitudes.Servicios.Controladores;
 /// </summary>
 [ApiController]
 [Route("api/catalogos")]
-[Authorize]
 [Produces("application/json")]
+[Authorize]
 public sealed class CatalogosController : ControllerBase
 {
     private readonly CatalogoServicio _catalogos;
@@ -29,7 +29,7 @@ public sealed class CatalogosController : ControllerBase
     /// <param name="cancellationToken">Token de cancelación de la petición.</param>
     [HttpGet("areas")]
     [ProducesResponseType(typeof(IReadOnlyList<AreaDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ObtenerAreas(CancellationToken cancellationToken)
     {
         var areas = await _catalogos.ObtenerAreasAsync(cancellationToken);
@@ -42,7 +42,7 @@ public sealed class CatalogosController : ControllerBase
     /// <param name="cancellationToken">Token de cancelación de la petición.</param>
     [HttpGet("tipos-solicitud")]
     [ProducesResponseType(typeof(IReadOnlyList<TipoSolicitudDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ObtenerTiposSolicitud(CancellationToken cancellationToken)
     {
         var tipos = await _catalogos.ObtenerTiposSolicitudAsync(cancellationToken);
@@ -57,8 +57,8 @@ public sealed class CatalogosController : ControllerBase
     [HttpPost("areas")]
     [Authorize(Roles = "Administrador")]
     [ProducesResponseType(typeof(AreaDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CrearArea(
         [FromBody] CrearAreaRequest peticion,
         CancellationToken cancellationToken)
@@ -78,8 +78,8 @@ public sealed class CatalogosController : ControllerBase
     [HttpPost("tipos-solicitud")]
     [Authorize(Roles = "Administrador")]
     [ProducesResponseType(typeof(TipoSolicitudDto), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CrearTipoSolicitud(
         [FromBody] CrearTipoSolicitudRequest peticion,
         CancellationToken cancellationToken)

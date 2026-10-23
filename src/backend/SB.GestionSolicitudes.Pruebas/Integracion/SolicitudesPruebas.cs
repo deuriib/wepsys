@@ -55,8 +55,8 @@ public sealed class SolicitudesPruebas
 
         var error = await respuesta.LeerComoAsync<ErrorPrueba>();
         error!.Codigo.ShouldBe("VALIDACION");
-        error.Errores.ShouldNotBeNull();
-        error.Errores.Keys.ShouldContain(clave => clave.Contains("Titulo", StringComparison.OrdinalIgnoreCase));
+        error.Errors.ShouldNotBeNull();
+        error.Errors.Keys.ShouldContain(clave => clave.Contains("Titulo", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -510,5 +510,5 @@ public sealed class SolicitudesPruebas
 
     private sealed record NotificacionPrueba(int Id, int SolicitudId, string Asunto, string Mensaje, bool Leida);
 
-    private sealed record ErrorPrueba(string? Codigo, string? Detalle, IDictionary<string, string[]>? Errores);
+    private sealed record ErrorPrueba(string? Codigo, string? Detalle, IDictionary<string, string[]>? Errors);
 }

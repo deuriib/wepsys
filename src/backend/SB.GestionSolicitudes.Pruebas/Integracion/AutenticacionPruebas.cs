@@ -83,8 +83,8 @@ public sealed class AutenticacionPruebas
 
         var error = await respuesta.LeerComoAsync<ErrorPrueba>();
         error!.Codigo.ShouldBe("VALIDACION");
-        error.Errores.ShouldNotBeNull();
-        error.Errores.Keys.ShouldContain(clave => clave.Contains("Correo", StringComparison.OrdinalIgnoreCase));
+        error.Errors.ShouldNotBeNull();
+        error.Errors.Keys.ShouldContain(clave => clave.Contains("Correo", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]
@@ -132,5 +132,5 @@ public sealed class AutenticacionPruebas
 
     private sealed record UsuarioSesionPrueba(int Id, string Nombre, string Correo, RolUsuario Rol, string RolDescripcion);
 
-    private sealed record ErrorPrueba(string? Codigo, string? Trazabilidad, IDictionary<string, string[]>? Errores);
+    private sealed record ErrorPrueba(string? Codigo, string? Trazabilidad, IDictionary<string, string[]>? Errors);
 }

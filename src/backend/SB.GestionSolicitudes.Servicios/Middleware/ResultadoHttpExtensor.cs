@@ -30,20 +30,19 @@ public static class ResultadoHttpExtensor
         return CrearRespuestaError(resultado.Error!, controlador);
     }
 
-    public static IActionResult CrearRespuestaError(ErrorAplicacion error, ControllerBase controlador) =>
-        new ObjectResult(new RespuestaError
-        {
-            Type = $"https://httpstatuses.io/{CodigoEstado(error.Tipo)}",
-            Title = TituloEstado(error.Tipo),
-            Status = CodigoEstado(error.Tipo),
-            Detail = error.Mensaje,
-            Instance = controlador.Request.Path,
-            Codigo = error.Codigo,
-            Trazabilidad = controlador.HttpContext.TraceIdentifier
-        })
-        {
-            StatusCode = CodigoEstado(error.Tipo)
-        };
+    /// <summary>
+    /// A rejected use case becomes an RFC 9457 problem document: the status comes from
+    /// <see cref="TipoError"/>, the title from the status and the stable business code
+    /// from the error itself.
+    /// </summary>
+    public static IActionResult CrearRespuestaError(ErrorAplicacion error, ControllerBase controlador)
+    {
+        var estado = CodigoEstado(error.Tipo);
+        var titulo = ProblemaApi.DescribirEstado(estado).Titulo;
+
+        return ProblemaApi.ComoResultado(
+            ProblemaApi.Crear(estado, error.Codigo, titulo, error.Mensaje, controlador.HttpContext));
+    }
 
     public static int CodigoEstado(TipoError tipo) => tipo switch
     {
@@ -53,15 +52,5 @@ public static class ResultadoHttpExtensor
         TipoError.NoAutorizado => StatusCodes.Status401Unauthorized,
         TipoError.Prohibido => StatusCodes.Status403Forbidden,
         _ => StatusCodes.Status500InternalServerError
-    };
-
-    private static string TituloEstado(TipoError tipo) => tipo switch
-    {
-        TipoError.Validacion => "Solicitud inválida",
-        TipoError.NoEncontrado => "Recurso no encontrado",
-        TipoError.Conflicto => "Conflicto con el estado actual",
-        TipoError.NoAutorizado => "No autenticado",
-        TipoError.Prohibido => "Acceso denegado",
-        _ => "Error interno"
     };
 }

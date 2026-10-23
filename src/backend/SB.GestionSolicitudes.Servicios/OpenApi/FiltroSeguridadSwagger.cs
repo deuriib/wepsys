@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using SB.GestionSolicitudes.Servicios.Errores;
@@ -25,11 +26,9 @@ public sealed class FiltroSeguridadSwagger : IOperationFilter
 
         operation.Responses.TryAdd("401", new OpenApiResponse
         {
-            Description = "No autenticado o token inválido.",
-            Content = new Dictionary<string, OpenApiMediaType>
-            {
-                ["application/json"] = new() { Schema = context.SchemaGenerator.GenerateSchema(typeof(RespuestaError), context.SchemaRepository) }
-            }
+            // The content schema is applied by FiltroProblemDetailsSwagger, which owns
+            // the error contract for every response.
+            Description = "No autenticado o token inválido."
         });
 
         operation.Security = new List<OpenApiSecurityRequirement>

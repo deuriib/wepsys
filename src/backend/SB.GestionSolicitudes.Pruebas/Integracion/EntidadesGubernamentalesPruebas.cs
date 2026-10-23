@@ -295,5 +295,5 @@ public sealed class EntidadesGubernamentalesPruebas
         IReadOnlyList<string> PoderesDelEstado,
         IReadOnlyList<string> Sectores);
 
-    private sealed record ErrorPrueba(string? Codigo, string? Detalle, IDictionary<string, string[]>? Errores);
+    private sealed record ErrorPrueba(string? Codigo, string? Detalle, IDictionary<string, string[]>? Errors);
 }

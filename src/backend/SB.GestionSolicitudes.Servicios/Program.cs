@@ -45,7 +45,8 @@ builder.Services
 
 builder.Services.Configure<ApiBehaviorOptions>(opciones =>
 {
-    // Model validation returns the same error contract as the rest of the API.
+    // Model validation returns the same RFC 9457 contract as the rest of the API,
+    // with the per-field messages in the standard `errors` member.
     opciones.InvalidModelStateResponseFactory = contextoAccion =>
     {
         var errores = contextoAccion.ModelState
@@ -58,19 +59,19 @@ builder.Services.Configure<ApiBehaviorOptions>(opciones =>
                         : error.ErrorMessage)
                     .ToArray());
 
-        return new BadRequestObjectResult(new RespuestaError
-        {
-            Type = "https://httpstatuses.io/400",
-            Title = "Solicitud inválida",
-            Status = StatusCodes.Status400BadRequest,
-            Detail = "Uno o más campos no cumplen las validaciones.",
-            Instance = contextoAccion.HttpContext.Request.Path,
-            Codigo = "VALIDACION",
-            Trazabilidad = contextoAccion.HttpContext.TraceIdentifier,
-            Errores = errores
-        });
+        return ProblemaApi.ComoResultado(
+            ProblemaApi.CrearValidacion(errores, contextoAccion.HttpContext));
     };
 });
+
+// Problem details is the single error contract. The exception handler, the status code
+// pages and the validation factory build their payloads with ProblemaApi; this
+// registration keeps framework-authored problems (for example Results.Problem) aligned
+// with the same `codigo` and `trazabilidad` extensions.
+builder.Services.AddProblemDetails(opciones =>
+    opciones.CustomizeProblemDetails = ProblemaApi.CompletarConTrazabilidad);
+
+builder.Services.AddExceptionHandler<ManejadorExcepciones>();
 
 // The secret is resolved when the options are built, not while this file runs, so
 // integration tests and deployed environments can supply it through the host
@@ -155,6 +156,10 @@ builder.Services.AddSwaggerGen(opciones =>
     });
 
     opciones.OperationFilter<FiltroSeguridadSwagger>();
+
+    // Registered last so it also normalizes the 401 response added by the security filter.
+    opciones.OperationFilter<FiltroProblemDetailsSwagger>();
+    opciones.SchemaFilter<FiltroEsquemaProblemaSwagger>();
 });
 
 builder.Services.AddHealthChecks();
@@ -167,7 +172,21 @@ app.UseSerilogRequestLogging(opciones =>
         "HTTP {RequestMethod} {RequestPath} respondió {StatusCode} en {Elapsed:0.0000} ms";
 });
 
-app.UseMiddleware<ManejadorExcepcionesMiddleware>();
+// Every failure leaves the API as an RFC 9457 problem document. The exception handler
+// covers thrown errors; the status code pages cover responses produced without a body
+// (JWT challenge, unknown route, unsupported media type) so no caller receives an empty
+// error response.
+app.UseExceptionHandler();
+app.UseStatusCodePages(async contexto =>
+{
+    var http = contexto.HttpContext;
+    var (codigo, titulo, detalle) = ProblemaApi.DescribirEstado(http.Response.StatusCode);
+
+    await ProblemaApi.EscribirAsync(
+        http,
+        ProblemaApi.Crear(http.Response.StatusCode, codigo, titulo, detalle, http));
+});
+
 app.UseCors(POLITICA_CORS);
 
 if (app.Configuration.GetValue("Documentacion:Habilitada", true))

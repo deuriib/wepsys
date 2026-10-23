@@ -12,8 +12,8 @@ namespace SB.GestionSolicitudes.Servicios.Controladores;
 /// </summary>
 [ApiController]
 [Route("api/notificaciones")]
-[Authorize]
 [Produces("application/json")]
+[Authorize]
 public sealed class NotificacionesController : ControllerBase
 {
     private readonly NotificacionServicio _notificaciones;
@@ -30,7 +30,7 @@ public sealed class NotificacionesController : ControllerBase
     /// <param name="cancellationToken">Token de cancelación de la petición.</param>
     [HttpGet]
     [ProducesResponseType(typeof(IReadOnlyList<NotificacionDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ObtenerMias(
         [FromQuery] bool soloNoLeidas,
         CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ public sealed class NotificacionesController : ControllerBase
     /// <param name="cancellationToken">Token de cancelación de la petición.</param>
     [HttpPatch("{id:int}/leida")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> MarcarComoLeida(int id, CancellationToken cancellationToken)
     {
         var resultado = await _notificaciones.MarcarComoLeidaAsync(id, cancellationToken);

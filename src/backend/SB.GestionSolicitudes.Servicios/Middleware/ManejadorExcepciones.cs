@@ -1,4 +1,4 @@
-using System.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using SB.GestionSolicitudes.Dominio.Excepciones;
@@ -7,38 +7,24 @@ using SB.GestionSolicitudes.Servicios.Errores;
 namespace SB.GestionSolicitudes.Servicios.Middleware;
 
 /// <summary>
-/// Central error boundary: every unhandled exception is logged with a correlation
-/// id and returned as a consistent RFC 7807 payload, so clients never receive a
-/// stack trace and logs always have the matching trace id.
+/// Central error boundary implemented as an <see cref="IExceptionHandler"/>: every
+/// unhandled exception is logged with a correlation id and returned as an RFC 9457
+/// problem document, so clients never receive a stack trace and logs always have the
+/// matching trace id.
 /// </summary>
-public sealed class ManejadorExcepcionesMiddleware
+public sealed class ManejadorExcepciones : IExceptionHandler
 {
-    private const string CABECERA_TRAZABILIDAD = "X-Trace-Id";
+    private readonly ILogger<ManejadorExcepciones> _registro;
 
-    private readonly RequestDelegate _siguiente;
-    private readonly ILogger<ManejadorExcepcionesMiddleware> _registro;
-
-    public ManejadorExcepcionesMiddleware(
-        RequestDelegate siguiente,
-        ILogger<ManejadorExcepcionesMiddleware> registro)
+    public ManejadorExcepciones(ILogger<ManejadorExcepciones> registro)
     {
-        _siguiente = siguiente;
         _registro = registro;
     }
 
-    public async Task InvokeAsync(HttpContext contexto)
-    {
-        try
-        {
-            await _siguiente(contexto);
-        }
-        catch (Exception excepcion)
-        {
-            await ManejarAsync(contexto, excepcion);
-        }
-    }
-
-    private async Task ManejarAsync(HttpContext contexto, Exception excepcion)
+    public async ValueTask<bool> TryHandleAsync(
+        HttpContext contexto,
+        Exception excepcion,
+        CancellationToken cancellationToken)
     {
         var trazabilidad = contexto.TraceIdentifier;
 
@@ -48,7 +34,7 @@ public sealed class ManejadorExcepcionesMiddleware
                 excepcion,
                 "Excepción después de iniciar la respuesta. Trazabilidad {Trazabilidad}",
                 trazabilidad);
-            return;
+            return false;
         }
 
         var (estado, codigo, titulo, detalle, registrarComoError) = Clasificar(excepcion);
@@ -73,19 +59,12 @@ public sealed class ManejadorExcepcionesMiddleware
         }
 
         contexto.Response.Clear();
-        contexto.Response.StatusCode = estado;
-        contexto.Response.Headers[CABECERA_TRAZABILIDAD] = trazabilidad;
 
-        await contexto.Response.WriteAsJsonAsync(new RespuestaError
-        {
-            Type = $"https://httpstatuses.io/{estado}",
-            Title = titulo,
-            Status = estado,
-            Detail = detalle,
-            Instance = contexto.Request.Path,
-            Codigo = codigo,
-            Trazabilidad = trazabilidad
-        });
+        await ProblemaApi.EscribirAsync(
+            contexto,
+            ProblemaApi.Crear(estado, codigo, titulo, detalle, contexto));
+
+        return true;
     }
 
     private static (int Estado, string Codigo, string Titulo, string Detalle, bool RegistrarComoError) Clasificar(

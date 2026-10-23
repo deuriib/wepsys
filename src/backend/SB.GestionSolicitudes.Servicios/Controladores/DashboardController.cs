@@ -12,8 +12,8 @@ namespace SB.GestionSolicitudes.Servicios.Controladores;
 /// </summary>
 [ApiController]
 [Route("api/dashboard")]
-[Authorize]
 [Produces("application/json")]
+[Authorize]
 public sealed class DashboardController : ControllerBase
 {
     private readonly TableroServicio _tablero;
@@ -30,7 +30,7 @@ public sealed class DashboardController : ControllerBase
     /// <param name="cancellationToken">Token de cancelación de la petición.</param>
     [HttpGet("resumen")]
     [ProducesResponseType(typeof(TableroResumenDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(RespuestaError), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> ObtenerResumen(CancellationToken cancellationToken)
     {
         var resultado = await _tablero.ObtenerResumenAsync(cancellationToken);

@@ -3,7 +3,15 @@ import logo from '../assets/logo-sb.png';
 import inicio from '../assets/home.svg';
 import { useSesion } from '../sesion/ContextoSesion';
 import { iniciales, tituloRol } from '../lib/formato';
-import { IconoBuscar, IconoCerrar, IconoCrear, IconoEntidades, IconoSalir, IconoUsuarios } from './Iconos';
+import {
+  IconoBuscar,
+  IconoCatalogo,
+  IconoCerrar,
+  IconoCrear,
+  IconoEntidades,
+  IconoSalir,
+  IconoUsuarios
+} from './Iconos';
 
 interface PropiedadesBarraLateral {
   abierta: boolean;
@@ -13,7 +21,7 @@ interface PropiedadesBarraLateral {
 interface Enlace {
   ruta: string;
   etiqueta: string;
-  icono: 'inicio' | 'consulta' | 'crear' | 'entidades' | 'usuarios';
+  icono: 'inicio' | 'consulta' | 'crear' | 'entidades' | 'usuarios' | 'catalogos';
   soloAdministrador?: boolean;
   exacto?: boolean;
 }
@@ -26,6 +34,7 @@ const ENLACES_PRINCIPALES: Enlace[] = [
 
 const ENLACES_GESTION: Enlace[] = [
   { ruta: '/entidades', etiqueta: 'Entidades gubernamentales', icono: 'entidades' },
+  { ruta: '/catalogos', etiqueta: 'Catálogos del sistema', icono: 'catalogos', soloAdministrador: true },
   { ruta: '/usuarios', etiqueta: 'Usuarios y roles', icono: 'usuarios', soloAdministrador: true }
 ];
 
@@ -50,6 +59,8 @@ function IconoEnlace({ tipo, activo }: { tipo: Enlace['icono']; activo: boolean 
       return <IconoCrear className={clase} />;
     case 'entidades':
       return <IconoEntidades className={clase} />;
+    case 'catalogos':
+      return <IconoCatalogo className={clase} />;
     default:
       return <IconoUsuarios className={clase} />;
   }

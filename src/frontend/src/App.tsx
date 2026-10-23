@@ -6,6 +6,7 @@ import { Consulta } from './paginas/Consulta';
 import { CrearRegistro } from './paginas/CrearRegistro';
 import { DetalleSolicitud } from './paginas/DetalleSolicitud';
 import { Entidades } from './paginas/Entidades';
+import { Catalogos } from './paginas/Catalogos';
 import { Inicio } from './paginas/Inicio';
 import { IniciarSesion } from './paginas/IniciarSesion';
 import { NoEncontrada } from './paginas/NoEncontrada';
@@ -53,6 +54,14 @@ export function App() {
         <Route path="/crear" element={<CrearRegistro />} />
         <Route path="/solicitudes/:id" element={<DetalleSolicitud />} />
         <Route path="/entidades" element={<Entidades />} />
+        <Route
+          path="/catalogos"
+          element={
+            <RutaAdministrador>
+              <Catalogos />
+            </RutaAdministrador>
+          }
+        />
         <Route path="/notificaciones" element={<Notificaciones />} />
         <Route
           path="/usuarios"

@@ -14,6 +14,15 @@ public sealed class CrearAreaRequest
     public string Nombre { get; init; } = string.Empty;
 }
 
+public sealed class ActualizarAreaRequest
+{
+    [Required(ErrorMessage = "El nombre del área es obligatorio.")]
+    [StringLength(Area.LONGITUD_MAXIMA_NOMBRE, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 120 caracteres.")]
+    public string Nombre { get; init; } = string.Empty;
+
+    public bool? Activa { get; init; }
+}
+
 public sealed class CrearTipoSolicitudRequest
 {
     [Required(ErrorMessage = "El nombre del tipo es obligatorio.")]
@@ -22,4 +31,16 @@ public sealed class CrearTipoSolicitudRequest
 
     [StringLength(TipoSolicitud.LONGITUD_MAXIMA_DESCRIPCION, ErrorMessage = "La descripción no puede superar 300 caracteres.")]
     public string Descripcion { get; init; } = string.Empty;
+}
+
+public sealed class ActualizarTipoSolicitudRequest
+{
+    [Required(ErrorMessage = "El nombre del tipo es obligatorio.")]
+    [StringLength(TipoSolicitud.LONGITUD_MAXIMA_NOMBRE, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 120 caracteres.")]
+    public string Nombre { get; init; } = string.Empty;
+
+    [StringLength(TipoSolicitud.LONGITUD_MAXIMA_DESCRIPCION, ErrorMessage = "La descripción no puede superar 300 caracteres.")]
+    public string? Descripcion { get; init; }
+
+    public bool? Activo { get; init; }
 }

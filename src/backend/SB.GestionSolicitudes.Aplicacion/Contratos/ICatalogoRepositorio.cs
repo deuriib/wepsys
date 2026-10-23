@@ -18,4 +18,20 @@ public interface ICatalogoRepositorio
     Task AgregarAreaAsync(Area area, CancellationToken cancellationToken = default);
 
     Task AgregarTipoSolicitudAsync(TipoSolicitud tipoSolicitud, CancellationToken cancellationToken = default);
+
+    Task<Area?> ObtenerAreaPorIdAsync(int id, CancellationToken cancellationToken = default);
+
+    Task<TipoSolicitud?> ObtenerTipoSolicitudPorIdAsync(int id, CancellationToken cancellationToken = default);
+
+    Task<bool> ExisteNombreAreaAsync(string nombre, int? excluirId, CancellationToken cancellationToken = default);
+
+    Task<bool> ExisteNombreTipoSolicitudAsync(string nombre, int? excluirId, CancellationToken cancellationToken = default);
+
+    Task<bool> AreaTieneSolicitudesAsync(int id, CancellationToken cancellationToken = default);
+
+    Task<bool> TipoSolicitudTieneSolicitudesAsync(int id, CancellationToken cancellationToken = default);
+
+    void EliminarArea(Area area);
+
+    void EliminarTipoSolicitud(TipoSolicitud tipoSolicitud);
 }

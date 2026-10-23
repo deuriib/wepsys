@@ -63,4 +63,30 @@ public sealed class CatalogoRepositorio : ICatalogoRepositorio
     {
         await _contexto.TiposSolicitud.AddAsync(tipoSolicitud, cancellationToken);
     }
+
+    public Task<Area?> ObtenerAreaPorIdAsync(int id, CancellationToken cancellationToken = default) =>
+        _contexto.Areas.FirstOrDefaultAsync(area => area.Id == id, cancellationToken);
+
+    public Task<TipoSolicitud?> ObtenerTipoSolicitudPorIdAsync(int id, CancellationToken cancellationToken = default) =>
+        _contexto.TiposSolicitud.FirstOrDefaultAsync(tipo => tipo.Id == id, cancellationToken);
+
+    public Task<bool> ExisteNombreAreaAsync(string nombre, int? excluirId, CancellationToken cancellationToken = default) =>
+        _contexto.Areas.AnyAsync(
+            area => area.Nombre == nombre && (excluirId == null || area.Id != excluirId),
+            cancellationToken);
+
+    public Task<bool> ExisteNombreTipoSolicitudAsync(string nombre, int? excluirId, CancellationToken cancellationToken = default) =>
+        _contexto.TiposSolicitud.AnyAsync(
+            tipo => tipo.Nombre == nombre && (excluirId == null || tipo.Id != excluirId),
+            cancellationToken);
+
+    public Task<bool> AreaTieneSolicitudesAsync(int id, CancellationToken cancellationToken = default) =>
+        _contexto.Solicitudes.AnyAsync(solicitud => solicitud.AreaId == id, cancellationToken);
+
+    public Task<bool> TipoSolicitudTieneSolicitudesAsync(int id, CancellationToken cancellationToken = default) =>
+        _contexto.Solicitudes.AnyAsync(solicitud => solicitud.TipoSolicitudId == id, cancellationToken);
+
+    public void EliminarArea(Area area) => _contexto.Areas.Remove(area);
+
+    public void EliminarTipoSolicitud(TipoSolicitud tipoSolicitud) => _contexto.TiposSolicitud.Remove(tipoSolicitud);
 }

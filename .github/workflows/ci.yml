@@ -1,0 +1,93 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.0.426
+
+      - name: Run backend tests
+        run: dotnet test src/backend/SB.GestionSolicitudes.sln --configuration Release
+
+  frontend:
+    name: Frontend build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24.22.1
+          cache: npm
+          cache-dependency-path: src/frontend/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: src/frontend
+        run: npm ci
+
+      - name: Type-check and build frontend
+        working-directory: src/frontend
+        run: npm run build
+
+  containers:
+    name: Build production containers
+    needs:
+      - backend
+      - frontend
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Build API image
+        run: >-
+          docker build --pull --target final
+          --tag sb-gestion-solicitudes/api:${{ github.sha }}
+          --file src/backend/SB.GestionSolicitudes.Servicios/Dockerfile .
+
+      - name: Build frontend image
+        run: >-
+          docker build --pull --target final
+          --tag sb-gestion-solicitudes/web:${{ github.sha }}
+          src/frontend
+
+  dependency-review:
+    name: Review dependency changes
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Check dependencies introduced by this pull request
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high

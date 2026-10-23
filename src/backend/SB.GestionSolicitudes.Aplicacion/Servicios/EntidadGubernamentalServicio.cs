@@ -162,6 +162,61 @@ public sealed class EntidadGubernamentalServicio
     public Task<OpcionesFiltroEntidadesDto> ObtenerOpcionesFiltroAsync(CancellationToken cancellationToken = default) =>
         _repositorio.ObtenerOpcionesFiltroAsync(cancellationToken);
 
+    public async Task<Resultado> AgregarOpcionCatalogoAsync(
+        string tipoCatalogo,
+        string valor,
+        CancellationToken cancellationToken = default)
+    {
+        if (!PuedeAdministrar())
+        {
+            return Resultado.Falla(ErrorAplicacion.Prohibido("Solo un administrador puede modificar los catálogos."));
+        }
+
+        var agregada = await _repositorio.AgregarOpcionCatalogoAsync(tipoCatalogo, valor, cancellationToken);
+        if (!agregada)
+        {
+            return Resultado.Falla(ErrorAplicacion.Conflicto($"La opción '{valor}' ya existe en el catálogo.", "OPCION_DUPLICADA"));
+        }
+
+        return Resultado.Ok();
+    }
+
+    public async Task<Resultado<int>> ActualizarOpcionCatalogoAsync(
+        string tipoCatalogo,
+        string valorActual,
+        string nuevoValor,
+        CancellationToken cancellationToken = default)
+    {
+        if (!PuedeAdministrar())
+        {
+            return Resultado.Falla<int>(ErrorAplicacion.Prohibido("Solo un administrador puede modificar los catálogos."));
+        }
+
+        var entidadesActualizadas = await _repositorio.ActualizarOpcionCatalogoAsync(tipoCatalogo, valorActual, nuevoValor, cancellationToken);
+        return Resultado.Ok(entidadesActualizadas);
+    }
+
+    public async Task<Resultado> EliminarOpcionCatalogoAsync(
+        string tipoCatalogo,
+        string valor,
+        CancellationToken cancellationToken = default)
+    {
+        if (!PuedeAdministrar())
+        {
+            return Resultado.Falla(ErrorAplicacion.Prohibido("Solo un administrador puede modificar los catálogos."));
+        }
+
+        var eliminada = await _repositorio.EliminarOpcionCatalogoAsync(tipoCatalogo, valor, cancellationToken);
+        if (!eliminada)
+        {
+            return Resultado.Falla(ErrorAplicacion.Conflicto(
+                $"No se puede eliminar la opción '{valor}' porque está asociada a una o más entidades gubernamentales.",
+                "OPCION_EN_USO"));
+        }
+
+        return Resultado.Ok();
+    }
+
     private bool PuedeAdministrar() =>
         _usuarioActual.Rol is RolUsuario.Administrador or RolUsuario.Analista;
 

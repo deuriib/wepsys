@@ -178,6 +178,69 @@ public sealed class RepositorioEntidadesArchivoPruebas : IDisposable
     }
 
     [Fact]
+    public async Task Agregar_opcion_catalogo_personalizada_se_incluye_en_opciones_de_filtro()
+    {
+        using (var repositorio = CrearRepositorio())
+        {
+            var agregada = await repositorio.AgregarOpcionCatalogoAsync("categorias", "Superintendencia Especial");
+            agregada.ShouldBeTrue();
+
+            var duplicada = await repositorio.AgregarOpcionCatalogoAsync("categorias", "superintendencia especial");
+            duplicada.ShouldBeFalse();
+        }
+
+        using var repositorioReiniciado = CrearRepositorio();
+        var opciones = await repositorioReiniciado.ObtenerOpcionesFiltroAsync();
+        opciones.Categorias.ShouldContain("Superintendencia Especial");
+    }
+
+    [Fact]
+    public async Task Actualizar_opcion_catalogo_renombra_opcion_y_actualiza_entidades()
+    {
+        using (var repositorio = CrearRepositorio())
+        {
+            var modificadas = await repositorio.ActualizarOpcionCatalogoAsync(
+                "categorias",
+                "Organismo Autónomo",
+                "Organismo Autónomo Constitucional");
+
+            modificadas.ShouldBe(1);
+        }
+
+        using var repositorioReiniciado = CrearRepositorio();
+        var opciones = await repositorioReiniciado.ObtenerOpcionesFiltroAsync();
+        opciones.Categorias.ShouldContain("Organismo Autónomo Constitucional");
+        opciones.Categorias.ShouldNotContain("Organismo Autónomo");
+
+        var todas = await repositorioReiniciado.ConsultarAsync(new FiltroEntidadGubernamental(), new ParametrosPaginacion());
+        var banco = todas.Elementos.Single(e => e.Nombre == "Banco Central de la República Dominicana");
+        banco.Categoria.ShouldBe("Organismo Autónomo Constitucional");
+    }
+
+    [Fact]
+    public async Task Eliminar_opcion_catalogo_en_uso_falla()
+    {
+        using var repositorio = CrearRepositorio();
+        var eliminada = await repositorio.EliminarOpcionCatalogoAsync("categorias", "Organismo Autónomo");
+        eliminada.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task Eliminar_opcion_catalogo_no_en_uso_tiene_exito()
+    {
+        using (var repositorio = CrearRepositorio())
+        {
+            await repositorio.AgregarOpcionCatalogoAsync("sectores", "Sector Temporal");
+            var eliminada = await repositorio.EliminarOpcionCatalogoAsync("sectores", "Sector Temporal");
+            eliminada.ShouldBeTrue();
+        }
+
+        using var repositorioReiniciado = CrearRepositorio();
+        var opciones = await repositorioReiniciado.ObtenerOpcionesFiltroAsync();
+        opciones.Sectores.ShouldNotContain("Sector Temporal");
+    }
+
+    [Fact]
     public async Task Ninguna_escritura_deja_archivos_temporales()
     {
         using var repositorio = CrearRepositorio();

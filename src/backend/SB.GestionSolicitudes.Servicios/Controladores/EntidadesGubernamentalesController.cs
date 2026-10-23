@@ -130,4 +130,116 @@ public sealed class EntidadesGubernamentalesController : ControllerBase
         var resultado = await _entidades.EliminarAsync(id, cancellationToken);
         return resultado.ComoRespuestaHttp(this);
     }
+
+    /// <summary>
+    /// Agrega una nueva opción a uno de los catálogos de entidades (categorias, poderes-del-estado, sectores).
+    /// Requiere rol Administrador.
+    /// </summary>
+    [HttpPost("catalogos/{catalogo}")]
+    [Authorize(Roles = "Administrador")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> AgregarOpcionCatalogo(
+        string catalogo,
+        [FromBody] CrearOpcionCatalogoRequest peticion,
+        CancellationToken cancellationToken)
+    {
+        if (!EsCatalogoValido(catalogo))
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Catálogo no válido",
+                Detail = $"El catálogo '{catalogo}' no es válido. Opciones permitidas: categorias, poderes-del-estado, sectores.",
+                Status = StatusCodes.Status400BadRequest
+            });
+        }
+
+        var resultado = await _entidades.AgregarOpcionCatalogoAsync(catalogo, peticion.Valor, cancellationToken);
+        return resultado.Exito
+            ? StatusCode(StatusCodes.Status201Created, new { valor = peticion.Valor.Trim() })
+            : resultado.ComoRespuestaHttp(this);
+    }
+
+    /// <summary>
+    /// Actualiza y renombra una opción existente en el catálogo y en todas las entidades gubernamentales que la posean.
+    /// Requiere rol Administrador.
+    /// </summary>
+    [HttpPut("catalogos/{catalogo}")]
+    [Authorize(Roles = "Administrador")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> ActualizarOpcionCatalogo(
+        string catalogo,
+        [FromBody] ActualizarOpcionCatalogoRequest peticion,
+        CancellationToken cancellationToken)
+    {
+        if (!EsCatalogoValido(catalogo))
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Catálogo no válido",
+                Detail = $"El catálogo '{catalogo}' no es válido. Opciones permitidas: categorias, poderes-del-estado, sectores.",
+                Status = StatusCodes.Status400BadRequest
+            });
+        }
+
+        var resultado = await _entidades.ActualizarOpcionCatalogoAsync(
+            catalogo,
+            peticion.ValorActual,
+            peticion.NuevoValor,
+            cancellationToken);
+
+        return resultado.ComoRespuestaHttp(this);
+    }
+
+    /// <summary>
+    /// Elimina una opción de un catálogo de entidades si ninguna entidad gubernamental la utiliza.
+    /// Requiere rol Administrador.
+    /// </summary>
+    [HttpDelete("catalogos/{catalogo}")]
+    [Authorize(Roles = "Administrador")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> EliminarOpcionCatalogo(
+        string catalogo,
+        [FromQuery] string valor,
+        CancellationToken cancellationToken)
+    {
+        if (!EsCatalogoValido(catalogo))
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Catálogo no válido",
+                Detail = $"El catálogo '{catalogo}' no es válido. Opciones permitidas: categorias, poderes-del-estado, sectores.",
+                Status = StatusCodes.Status400BadRequest
+            });
+        }
+
+        if (string.IsNullOrWhiteSpace(valor))
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Parámetro requerido",
+                Detail = "Debe proporcionar el parámetro 'valor' para eliminar la opción del catálogo.",
+                Status = StatusCodes.Status400BadRequest
+            });
+        }
+
+        var resultado = await _entidades.EliminarOpcionCatalogoAsync(catalogo, valor, cancellationToken);
+        return resultado.ComoRespuestaHttp(this);
+    }
+
+    private static bool EsCatalogoValido(string catalogo) =>
+        (catalogo ?? string.Empty).ToLowerInvariant() switch
+        {
+            "categorias" or "categoria" or
+            "poderes-del-estado" or "poder-del-estado" or "poderesdelestado" or "poder" or
+            "sectores" or "sector" => true,
+            _ => false
+        };
 }

@@ -238,15 +238,240 @@ public sealed class RepositorioEntidadesGubernamentalesArchivo : IEntidadGuberna
         {
             var documento = await ObtenerDocumentoAsync(cancellationToken);
 
-            return new OpcionesFiltroEntidadesDto(
-                documento.Entidades.Select(entidad => entidad.Categoria).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(valor => valor).ToList(),
-                documento.Entidades.Select(entidad => entidad.PoderDelEstado).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(valor => valor).ToList(),
-                documento.Entidades.Select(entidad => entidad.Sector).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(valor => valor).ToList());
+            var categorias = (documento.CategoriasPersonalizadas ?? Enumerable.Empty<string>())
+                .Concat(documento.Entidades.Select(entidad => entidad.Categoria))
+                .Where(valor => !string.IsNullOrWhiteSpace(valor))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(valor => valor)
+                .ToList();
+
+            var poderes = (documento.PoderesDelEstadoPersonalizados ?? Enumerable.Empty<string>())
+                .Concat(documento.Entidades.Select(entidad => entidad.PoderDelEstado))
+                .Where(valor => !string.IsNullOrWhiteSpace(valor))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(valor => valor)
+                .ToList();
+
+            var sectores = (documento.SectoresPersonalizados ?? Enumerable.Empty<string>())
+                .Concat(documento.Entidades.Select(entidad => entidad.Sector))
+                .Where(valor => !string.IsNullOrWhiteSpace(valor))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(valor => valor)
+                .ToList();
+
+            return new OpcionesFiltroEntidadesDto(categorias, poderes, sectores);
         }
         finally
         {
             _semaforo.Release();
         }
+    }
+
+    public async Task<bool> AgregarOpcionCatalogoAsync(
+        string tipoCatalogo,
+        string valor,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(valor))
+        {
+            throw new ArgumentException("El valor no puede estar vacío.", nameof(valor));
+        }
+
+        var valorLimpio = valor.Trim();
+        var tipoNormalizado = NormalizarTipoCatalogo(tipoCatalogo);
+
+        await _semaforo.WaitAsync(cancellationToken);
+
+        try
+        {
+            var documento = await ObtenerDocumentoAsync(cancellationToken);
+            List<string> lista;
+            IEnumerable<string> opcionesExistentes;
+
+            switch (tipoNormalizado)
+            {
+                case "categoria":
+                    documento.CategoriasPersonalizadas ??= new List<string>();
+                    lista = documento.CategoriasPersonalizadas;
+                    opcionesExistentes = lista.Concat(documento.Entidades.Select(e => e.Categoria));
+                    break;
+                case "poder":
+                    documento.PoderesDelEstadoPersonalizados ??= new List<string>();
+                    lista = documento.PoderesDelEstadoPersonalizados;
+                    opcionesExistentes = lista.Concat(documento.Entidades.Select(e => e.PoderDelEstado));
+                    break;
+                case "sector":
+                    documento.SectoresPersonalizados ??= new List<string>();
+                    lista = documento.SectoresPersonalizados;
+                    opcionesExistentes = lista.Concat(documento.Entidades.Select(e => e.Sector));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(tipoCatalogo));
+            }
+
+            if (opcionesExistentes.Any(opcion => opcion.Equals(valorLimpio, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+
+            lista.Add(valorLimpio);
+            await PersistirAsync(documento, cancellationToken);
+            return true;
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
+    }
+
+    public async Task<int> ActualizarOpcionCatalogoAsync(
+        string tipoCatalogo,
+        string valorActual,
+        string nuevoValor,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(valorActual))
+        {
+            throw new ArgumentException("El valor actual no puede estar vacío.", nameof(valorActual));
+        }
+
+        if (string.IsNullOrWhiteSpace(nuevoValor))
+        {
+            throw new ArgumentException("El nuevo valor no puede estar vacío.", nameof(nuevoValor));
+        }
+
+        var actualLimpio = valorActual.Trim();
+        var nuevoLimpio = nuevoValor.Trim();
+        var tipoNormalizado = NormalizarTipoCatalogo(tipoCatalogo);
+
+        await _semaforo.WaitAsync(cancellationToken);
+
+        try
+        {
+            var documento = await ObtenerDocumentoAsync(cancellationToken);
+            int entidadesModificadas = 0;
+            var ahora = DateTime.UtcNow;
+
+            switch (tipoNormalizado)
+            {
+                case "categoria":
+                    documento.CategoriasPersonalizadas ??= new List<string>();
+                    ActualizarEnLista(documento.CategoriasPersonalizadas, actualLimpio, nuevoLimpio);
+                    foreach (var entidad in documento.Entidades)
+                    {
+                        if (entidad.Categoria.Equals(actualLimpio, StringComparison.OrdinalIgnoreCase))
+                        {
+                            entidad.Categoria = nuevoLimpio;
+                            entidad.FechaActualizacion = ahora;
+                            entidadesModificadas++;
+                        }
+                    }
+                    break;
+                case "poder":
+                    documento.PoderesDelEstadoPersonalizados ??= new List<string>();
+                    ActualizarEnLista(documento.PoderesDelEstadoPersonalizados, actualLimpio, nuevoLimpio);
+                    foreach (var entidad in documento.Entidades)
+                    {
+                        if (entidad.PoderDelEstado.Equals(actualLimpio, StringComparison.OrdinalIgnoreCase))
+                        {
+                            entidad.PoderDelEstado = nuevoLimpio;
+                            entidad.FechaActualizacion = ahora;
+                            entidadesModificadas++;
+                        }
+                    }
+                    break;
+                case "sector":
+                    documento.SectoresPersonalizados ??= new List<string>();
+                    ActualizarEnLista(documento.SectoresPersonalizados, actualLimpio, nuevoLimpio);
+                    foreach (var entidad in documento.Entidades)
+                    {
+                        if (entidad.Sector.Equals(actualLimpio, StringComparison.OrdinalIgnoreCase))
+                        {
+                            entidad.Sector = nuevoLimpio;
+                            entidad.FechaActualizacion = ahora;
+                            entidadesModificadas++;
+                        }
+                    }
+                    break;
+            }
+
+            await PersistirAsync(documento, cancellationToken);
+            return entidadesModificadas;
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
+    }
+
+    public async Task<bool> EliminarOpcionCatalogoAsync(
+        string tipoCatalogo,
+        string valor,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(valor))
+        {
+            throw new ArgumentException("El valor no puede estar vacío.", nameof(valor));
+        }
+
+        var valorLimpio = valor.Trim();
+        var tipoNormalizado = NormalizarTipoCatalogo(tipoCatalogo);
+
+        await _semaforo.WaitAsync(cancellationToken);
+
+        try
+        {
+            var documento = await ObtenerDocumentoAsync(cancellationToken);
+            bool enUso = false;
+
+            switch (tipoNormalizado)
+            {
+                case "categoria":
+                    enUso = documento.Entidades.Any(e => e.Categoria.Equals(valorLimpio, StringComparison.OrdinalIgnoreCase));
+                    if (enUso) return false;
+                    documento.CategoriasPersonalizadas?.RemoveAll(x => x.Equals(valorLimpio, StringComparison.OrdinalIgnoreCase));
+                    break;
+                case "poder":
+                    enUso = documento.Entidades.Any(e => e.PoderDelEstado.Equals(valorLimpio, StringComparison.OrdinalIgnoreCase));
+                    if (enUso) return false;
+                    documento.PoderesDelEstadoPersonalizados?.RemoveAll(x => x.Equals(valorLimpio, StringComparison.OrdinalIgnoreCase));
+                    break;
+                case "sector":
+                    enUso = documento.Entidades.Any(e => e.Sector.Equals(valorLimpio, StringComparison.OrdinalIgnoreCase));
+                    if (enUso) return false;
+                    documento.SectoresPersonalizados?.RemoveAll(x => x.Equals(valorLimpio, StringComparison.OrdinalIgnoreCase));
+                    break;
+            }
+
+            await PersistirAsync(documento, cancellationToken);
+            return true;
+        }
+        finally
+        {
+            _semaforo.Release();
+        }
+    }
+
+    private static void ActualizarEnLista(List<string> lista, string actual, string nuevo)
+    {
+        for (int i = 0; i < lista.Count; i++)
+        {
+            if (lista[i].Equals(actual, StringComparison.OrdinalIgnoreCase))
+            {
+                lista[i] = nuevo;
+            }
+        }
+    }
+
+    private static string NormalizarTipoCatalogo(string tipoCatalogo)
+    {
+        return (tipoCatalogo ?? string.Empty).Trim().ToLowerInvariant() switch
+        {
+            "categorias" or "categoria" => "categoria",
+            "poderes-del-estado" or "poder-del-estado" or "poderesdelestado" or "poder" => "poder",
+            "sectores" or "sector" => "sector",
+            _ => throw new ArgumentException($"Tipo de catálogo no reconocido: '{tipoCatalogo}'.", nameof(tipoCatalogo))
+        };
     }
 
     public void Dispose() => _semaforo.Dispose();

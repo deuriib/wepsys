@@ -31,4 +31,10 @@ public interface IEntidadGubernamentalRepositorio
     Task AgregarRangoAsync(IEnumerable<EntidadGubernamental> entidades, CancellationToken cancellationToken = default);
 
     Task<OpcionesFiltroEntidadesDto> ObtenerOpcionesFiltroAsync(CancellationToken cancellationToken = default);
+
+    Task<bool> AgregarOpcionCatalogoAsync(string tipoCatalogo, string valor, CancellationToken cancellationToken = default);
+
+    Task<int> ActualizarOpcionCatalogoAsync(string tipoCatalogo, string valorActual, string nuevoValor, CancellationToken cancellationToken = default);
+
+    Task<bool> EliminarOpcionCatalogoAsync(string tipoCatalogo, string valor, CancellationToken cancellationToken = default);
 }

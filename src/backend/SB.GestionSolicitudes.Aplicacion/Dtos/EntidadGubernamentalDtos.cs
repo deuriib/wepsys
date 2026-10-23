@@ -72,3 +72,20 @@ public sealed record OpcionesFiltroEntidadesDto(
     IReadOnlyList<string> Categorias,
     IReadOnlyList<string> PoderesDelEstado,
     IReadOnlyList<string> Sectores);
+
+public sealed class CrearOpcionCatalogoRequest
+{
+    [Required(ErrorMessage = "El valor es obligatorio.")]
+    [StringLength(120, MinimumLength = 2, ErrorMessage = "El valor debe tener entre 2 y 120 caracteres.")]
+    public string Valor { get; init; } = string.Empty;
+}
+
+public sealed class ActualizarOpcionCatalogoRequest
+{
+    [Required(ErrorMessage = "El valor actual es obligatorio.")]
+    public string ValorActual { get; init; } = string.Empty;
+
+    [Required(ErrorMessage = "El nuevo valor es obligatorio.")]
+    [StringLength(120, MinimumLength = 2, ErrorMessage = "El nuevo valor debe tener entre 2 y 120 caracteres.")]
+    public string NuevoValor { get; init; } = string.Empty;
+}

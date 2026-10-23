@@ -33,4 +33,10 @@ public sealed class DocumentoEntidadesGubernamentales
     public int Version { get; set; } = VERSION_ACTUAL;
 
     public List<Dominio.EntidadesGubernamentales.EntidadGubernamental> Entidades { get; set; } = new();
+
+    public List<string> CategoriasPersonalizadas { get; set; } = new();
+
+    public List<string> PoderesDelEstadoPersonalizados { get; set; } = new();
+
+    public List<string> SectoresPersonalizados { get; set; } = new();
 }

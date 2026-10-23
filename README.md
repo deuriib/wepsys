@@ -50,7 +50,7 @@ La plataforma implementa un sistema empresarial para registrar, dar seguimiento,
 │   │   ├── SB.GestionSolicitudes.Infraestructura/ # EF Core, Archivo plano, Seguridad, Canales
 │   │   ├── SB.GestionSolicitudes.Servicios/ # ASP.NET Core Web API, Middlewares, Controllers
 │   │   │   └── Dockerfile                   # Imagen multi-etapa del API (runtime, pruebas, desarrollo)
-│   │   └── SB.GestionSolicitudes.Pruebas/   # Suite de 127 Pruebas Unitarias e Integración
+│   │   └── SB.GestionSolicitudes.Pruebas/   # Suite de 144 Pruebas Unitarias e Integración
 │   └── frontend/                            # Aplicación React + TypeScript + Vite + Tailwind
 │       ├── Dockerfile                       # Imagen multi-etapa (build, desarrollo, nginx)
 │       └── nginx.conf                       # Servidor estático + proxy hacia el API

@@ -25,7 +25,7 @@ in a flat-file JSON store (as required by the technical specification).
 | **Flat-file DB**  | `database/entidades-gubernamentales.json` (async semaphore-guarded) |
 | **Logging**       | Serilog (console + rolling file)                           |
 | **API Docs**      | Scalar (`/docs/v1`) + Swagger UI (`/swagger`)              |
-| **Tests**         | 127 automated tests (unit + integration via Testcontainers) |
+| **Tests**         | 144 automated tests (unit + integration via Testcontainers) |
 | **CI**            | GitHub Actions — `.github/workflows/ci.yml`                |
 | **Task runner**   | [mise](https://mise.jdx.dev/) — `mise.toml`               |
 
@@ -50,7 +50,7 @@ in a flat-file JSON store (as required by the technical specification).
 │   │   ├── SB.GestionSolicitudes.Aplicacion/      # Layer 2 — Use cases, DTOs, Interfaces
 │   │   ├── SB.GestionSolicitudes.Infraestructura/ # Layer 3 — EF Core, Flat-file, JWT, Notifications
 │   │   ├── SB.GestionSolicitudes.Servicios/       # Layer 4 — ASP.NET Core API, Controllers, Middleware
-│   │   └── SB.GestionSolicitudes.Pruebas/         # Test suite (127 tests)
+│   │   └── SB.GestionSolicitudes.Pruebas/         # Test suite (144 tests)
 │   └── frontend/                            # React + TypeScript SPA
 │       ├── src/
 │       ├── Dockerfile
@@ -301,7 +301,7 @@ dotnet ef migrations add <MigrationName> \
 
 ## 12. Testing
 
-- **Suite**: 127 tests — unit and integration.
+- **Suite**: 144 tests — unit and integration.
 - **Integration tests**: spin up a disposable SQL Server instance via **Testcontainers**. Requires Docker to be running.
 - **Run everything**:
 
@@ -309,7 +309,7 @@ dotnet ef migrations add <MigrationName> \
   dotnet test src/backend/SB.GestionSolicitudes.sln
   ```
 
-- **Expected result**: `Failed: 0, Passed: 127, Skipped: 0, Total: 127`
+- **Expected result**: `Failed: 0, Passed: 144, Skipped: 0, Total: 144`
 - **In a container**:
 
   ```bash

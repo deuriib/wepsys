@@ -328,7 +328,7 @@ Triggers: `push` to `main`, `pull_request` targeting `main`, manual dispatch.
 
 | Job                  | What it validates                                                |
 | :------------------- | :--------------------------------------------------------------- |
-| `backend-tests`      | `dotnet test` — all 127 tests including integration via Docker  |
+| `backend-tests`      | `dotnet test` — all 144 tests; integration tests use a SQL Server service container in CI (no Docker socket required on the runner) |
 | `frontend-build`     | `tsc --noEmit && vite build` — type-safe production build       |
 | `container-build`    | Multi-stage Docker builds for API and web (runs after both pass)|
 | `dependency-review`  | Fails on high/critical severity dependency changes (PRs only)   |
@@ -380,7 +380,7 @@ Before making any code change:
 - [ ] Read this file in full.
 - [ ] Read `docs/arquitectura.md` to understand pattern decisions.
 - [ ] Run `mise install && mise run setup` to verify the toolchain.
-- [ ] Confirm `dotnet test` passes (127/127) with Docker running.
+- [ ] Confirm `dotnet test` passes (144/144) with Docker running (Testcontainers) or `ConnectionStrings__BaseDatosPruebas` set.
 - [ ] Check `.env.example` to understand required variables.
 - [ ] Identify the correct Onion layer for your change — do not cross layer boundaries.
 - [ ] Verify your change does not introduce a dependency violation (inner → outer).

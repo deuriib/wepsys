@@ -494,7 +494,7 @@ export function Entidades() {
                       <td className="px-4 py-3.5">
                         <InsigniaActiva activa={entidad.activa} />
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3.5 text-slate-500">
+                      <td className="whitespace-nowrap ${esAdministrador ? 'px-4' : 'px-6'} py-3.5 text-slate-500">
                         {formatearFecha(entidad.fechaActualizacion)}
                       </td>
                       {esAdministrador && (

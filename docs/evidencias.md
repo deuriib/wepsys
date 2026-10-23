@@ -6,9 +6,18 @@ Este documento certifica el cumplimiento funcional y técnico de la solución de
 
 ## 1. Validación de Pruebas Automatizadas
 
-El proyecto cuenta con **123 pruebas automatizadas** entre pruebas unitarias (de dominio, servicios, seguridad y repositorio plano) y pruebas de integración sobre endpoints HTTP reales utilizando `WebApplicationFactory<Program>`.
+El proyecto cuenta con **127 pruebas automatizadas** entre pruebas unitarias (de dominio, servicios, seguridad y repositorio plano) y pruebas de integración sobre endpoints HTTP reales utilizando `WebApplicationFactory<Program>`.
+
+Las pruebas de integración corren contra **SQL Server 2022** real: **Testcontainers** levanta un contenedor efímero por corrida (`mcr.microsoft.com/mssql/server:2022-latest`) y cada prueba crea su propia base desechable `SbPruebas_<guid>`, que elimina al terminar. El único requisito es tener Docker en ejecución.
 
 ### Resultado de Ejecución de Pruebas
+
+Comando ejecutado (sin variables de entorno: Testcontainers provee el motor):
+
+```bash
+dotnet test src/backend/SB.GestionSolicitudes.sln
+```
+
 ```text
 Test run for C:\Users\deuri\projects\wepsys\src\backend\SB.GestionSolicitudes.Pruebas\bin\Debug\net8.0\SB.GestionSolicitudes.Pruebas.dll (.NETCoreApp,Version=v8.0)
 VSTest version 17.11.1 (x64)
@@ -16,8 +25,40 @@ VSTest version 17.11.1 (x64)
 Starting test execution, please wait...
 A total of 1 test files matched the specified pattern.
 
-Passed!  - Failed:     0, Passed:   123, Skipped:     0, Total:   123, Duration: 18 s - SB.GestionSolicitudes.Pruebas.dll (net8.0)
+Passed!  - Failed:     0, Passed:   127, Skipped:     0, Total:   127, Duration: 2 m 48 s - SB.GestionSolicitudes.Pruebas.dll (net8.0)
 ```
+
+La duración incluye crear, migrar, sembrar y eliminar 53 bases de datos sobre el contenedor de SQL Server; al terminar, el contenedor desaparece (lo retira Ryuk) y no queda ninguna base `SbPruebas_*` en la instancia.
+
+---
+
+### Validación de los Scripts T-SQL de Referencia
+
+`database/schema.sql` y `database/seed.sql` se aplicaron sobre una base desechable (`SbValidacionScripts`) dentro del contenedor SQL Server 2022 de la composición, usando `sqlcmd` 18 con `-b` (aborta ante cualquier error):
+
+```text
+==== schema.sql ====
+(1 rows affected)
+EXIT=0
+
+==== seed.sql (1a vez) ====
+EXIT1=0
+
+==== seed.sql (2a vez: idempotencia) ====
+EXIT2=0
+
+Tabla|Filas
+-----|-----
+Areas|6
+TiposSolicitud|5
+Usuarios|4
+Solicitudes|5
+HistorialesEstado|9
+Comentarios|3
+Notificaciones|3
+```
+
+La segunda ejecución de `seed.sql` no duplica filas: cada tabla está protegida con `IF NOT EXISTS` y los `IDENTITY_INSERT` se activan y desactivan por tabla. Los hashes PBKDF2-SHA256 de las cuentas semilla se comprobaron con 120 000 iteraciones.
 
 ---
 

@@ -34,54 +34,66 @@ public static class SemillaDatos
         // (local, tests, staging) advances the database the same way.
         await contexto.Database.MigrateAsync(cancellationToken);
 
-        if (await contexto.Usuarios.AnyAsync(cancellationToken))
-        {
-            return;
-        }
-
         // The seed spans several tables; a transaction keeps it all-or-nothing so a
-        // failure cannot leave a half-populated database behind.
-        await using var transaccion = await contexto.Database.BeginTransactionAsync(cancellationToken);
+        // failure cannot leave a half-populated database behind. SQL Server retries
+        // transient faults, and a retry cannot re-run a user-initiated transaction
+        // unless it is wrapped by the configured execution strategy.
+        var estrategia = contexto.Database.CreateExecutionStrategy();
 
-        var hash = alcance.ServiceProvider.GetRequiredService<IServicioHashContrasena>();
-        var reloj = alcance.ServiceProvider.GetRequiredService<IReloj>();
-        var ahora = reloj.Ahora;
-
-        var administrador = CrearUsuario("Ana Martínez", CORREO_ADMINISTRADOR, CONTRASENA_ADMINISTRADOR, RolUsuario.Administrador, hash, ahora.AddMonths(-8));
-        var analista = CrearUsuario("Luis Peña", CORREO_ANALISTA, CONTRASENA_ANALISTA, RolUsuario.Analista, hash, ahora.AddMonths(-7));
-        var analistaDos = CrearUsuario("Carla Jiménez", CORREO_ANALISTA_DOS, CONTRASENA_ANALISTA, RolUsuario.Analista, hash, ahora.AddMonths(-5));
-        var solicitante = CrearUsuario("Pedro Ramírez", CORREO_SOLICITANTE, CONTRASENA_SOLICITANTE, RolUsuario.Solicitante, hash, ahora.AddMonths(-6));
-
-        contexto.Usuarios.AddRange(administrador, analista, analistaDos, solicitante);
-
-        var areas = new[]
+        await estrategia.ExecuteAsync(async () =>
         {
-            new Area { Nombre = "Tecnología de la Información", Activa = true },
-            new Area { Nombre = "Canales de Atención", Activa = true },
-            new Area { Nombre = "Recursos Humanos", Activa = true },
-            new Area { Nombre = "Operaciones", Activa = true },
-            new Area { Nombre = "Riesgos", Activa = true },
-            new Area { Nombre = "Finanzas", Activa = true }
-        };
+            // A failed attempt leaves the added entities tracked, so a retry would
+            // insert them twice. Clearing and re-checking makes the seed idempotent
+            // from the point of view of the strategy.
+            contexto.ChangeTracker.Clear();
 
-        var tipos = new[]
-        {
-            new TipoSolicitud { Nombre = "Incidente", Descripcion = "Falla que afecta la operación.", Activo = true },
-            new TipoSolicitud { Nombre = "Requerimiento", Descripcion = "Solicitud de un servicio o dato.", Activo = true },
-            new TipoSolicitud { Nombre = "Acceso", Descripcion = "Alta, baja o cambio de permisos.", Activo = true },
-            new TipoSolicitud { Nombre = "Hardware", Descripcion = "Equipos, periféricos y consumibles.", Activo = true },
-            new TipoSolicitud { Nombre = "Mejora", Descripcion = "Automatización o desarrollo nuevo.", Activo = true }
-        };
+            if (await contexto.Usuarios.AnyAsync(cancellationToken))
+            {
+                return;
+            }
 
-        contexto.Areas.AddRange(areas);
-        contexto.TiposSolicitud.AddRange(tipos);
-        await contexto.SaveChangesAsync(cancellationToken);
+            await using var transaccion = await contexto.Database.BeginTransactionAsync(cancellationToken);
 
-        var solicitudes = ConstruirSolicitudes(areas, tipos, solicitante, analista, analistaDos, ahora);
-        contexto.Solicitudes.AddRange(solicitudes);
-        await contexto.SaveChangesAsync(cancellationToken);
+            var hash = alcance.ServiceProvider.GetRequiredService<IServicioHashContrasena>();
+            var reloj = alcance.ServiceProvider.GetRequiredService<IReloj>();
+            var ahora = reloj.Ahora;
 
-        await transaccion.CommitAsync(cancellationToken);
+            var administrador = CrearUsuario("Ana Martínez", CORREO_ADMINISTRADOR, CONTRASENA_ADMINISTRADOR, RolUsuario.Administrador, hash, ahora.AddMonths(-8));
+            var analista = CrearUsuario("Luis Peña", CORREO_ANALISTA, CONTRASENA_ANALISTA, RolUsuario.Analista, hash, ahora.AddMonths(-7));
+            var analistaDos = CrearUsuario("Carla Jiménez", CORREO_ANALISTA_DOS, CONTRASENA_ANALISTA, RolUsuario.Analista, hash, ahora.AddMonths(-5));
+            var solicitante = CrearUsuario("Pedro Ramírez", CORREO_SOLICITANTE, CONTRASENA_SOLICITANTE, RolUsuario.Solicitante, hash, ahora.AddMonths(-6));
+
+            contexto.Usuarios.AddRange(administrador, analista, analistaDos, solicitante);
+
+            var areas = new[]
+            {
+                new Area { Nombre = "Tecnología de la Información", Activa = true },
+                new Area { Nombre = "Canales de Atención", Activa = true },
+                new Area { Nombre = "Recursos Humanos", Activa = true },
+                new Area { Nombre = "Operaciones", Activa = true },
+                new Area { Nombre = "Riesgos", Activa = true },
+                new Area { Nombre = "Finanzas", Activa = true }
+            };
+
+            var tipos = new[]
+            {
+                new TipoSolicitud { Nombre = "Incidente", Descripcion = "Falla que afecta la operación.", Activo = true },
+                new TipoSolicitud { Nombre = "Requerimiento", Descripcion = "Solicitud de un servicio o dato.", Activo = true },
+                new TipoSolicitud { Nombre = "Acceso", Descripcion = "Alta, baja o cambio de permisos.", Activo = true },
+                new TipoSolicitud { Nombre = "Hardware", Descripcion = "Equipos, periféricos y consumibles.", Activo = true },
+                new TipoSolicitud { Nombre = "Mejora", Descripcion = "Automatización o desarrollo nuevo.", Activo = true }
+            };
+
+            contexto.Areas.AddRange(areas);
+            contexto.TiposSolicitud.AddRange(tipos);
+            await contexto.SaveChangesAsync(cancellationToken);
+
+            var solicitudes = ConstruirSolicitudes(areas, tipos, solicitante, analista, analistaDos, ahora);
+            contexto.Solicitudes.AddRange(solicitudes);
+            await contexto.SaveChangesAsync(cancellationToken);
+
+            await transaccion.CommitAsync(cancellationToken);
+        });
     }
 
     private static Usuario CrearUsuario(

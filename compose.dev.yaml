@@ -1,6 +1,9 @@
 # Development environment with hot reload:
 #   docker compose -f compose.yaml -f compose.dev.yaml up --build
 # Requires Docker Compose v2.24+ because the web ports are replaced with `!override`.
+# The `sqlserver` service and the API connection string are inherited from
+# compose.yaml; this overlay only changes the runtime, the mounts and the reload
+# behavior.
 services:
   api:
     build:
@@ -11,10 +14,13 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
       DOTNET_WATCH_RESTART_ON_RUDE_EDIT: "true"
-    # Source and data come from the host, so edits reload and the SQLite file is
-    # the same one the local `dotnet run` flow uses. The anonymous volumes below
-    # shadow every bin/obj folder: the container restores its own Linux assets
-    # and never overwrites the Windows build output living on the host.
+    # Source and catalog come from the host, so edits reload and the plain-text
+    # `database/entidades-gubernamentales.json` is the same one the local
+    # `dotnet run` flow uses. Relational data stays in the `sqlserver` service
+    # inherited from compose.yaml (reachable as `sqlserver:1433` on the `sb`
+    # network). The anonymous volumes below shadow every bin/obj folder: the
+    # container restores its own Linux assets and never overwrites the Windows
+    # build output living on the host.
     volumes:
       - ./src/backend:/app/src/backend
       - ./database:/app/database

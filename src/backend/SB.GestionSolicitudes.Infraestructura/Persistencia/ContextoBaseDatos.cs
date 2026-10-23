@@ -7,8 +7,9 @@ using SB.GestionSolicitudes.Dominio.Usuarios;
 namespace SB.GestionSolicitudes.Infraestructura.Persistencia;
 
 /// <summary>
-/// Entity Framework Core unit of work over the relational model (SQL Server in
-/// the reference environment, SQLite for local/CI execution).
+/// Entity Framework Core unit of work over the relational model. The relational
+/// store is SQL Server; the government entities catalog lives outside of it, in
+/// the plain-text file required by the specification.
 /// </summary>
 public sealed class ContextoBaseDatos : DbContext
 {

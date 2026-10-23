@@ -21,6 +21,12 @@ public static class InyeccionDependencias
 {
     private const string NOMBRE_CADENA_CONEXION = "BaseDatos";
 
+    // SQL Server may still be starting its recovery when the API boots (compose
+    // health checks are not always available, for example in Kubernetes). These
+    // values make the first query wait instead of crashing the process.
+    private const int INTENTOS_REINTENTO = 6;
+    private const int SEGUNDOS_ESPERA_MAXIMA_REINTENTO = 10;
+
     public static IServiceCollection AgregarInfraestructura(
         this IServiceCollection servicios,
         IConfiguration configuracion,
@@ -32,7 +38,12 @@ public static class InyeccionDependencias
         servicios.AddDbContext<ContextoBaseDatos>((proveedor, opciones) =>
         {
             var configuracionActual = proveedor.GetRequiredService<IConfiguration>();
-            opciones.UseSqlite(ResolverCadenaConexion(ObtenerCadenaConexion(configuracionActual), directorioContenido));
+            opciones.UseSqlServer(
+                ObtenerCadenaConexion(configuracionActual),
+                sql => sql.EnableRetryOnFailure(
+                    INTENTOS_REINTENTO,
+                    TimeSpan.FromSeconds(SEGUNDOS_ESPERA_MAXIMA_REINTENTO),
+                    null));
         });
 
         servicios.AddOptions<OpcionesAlmacenEntidades>()
@@ -71,42 +82,10 @@ public static class InyeccionDependencias
 
     /// <summary>
     /// Reads the connection string and fails with an actionable message when it is
-    /// missing, instead of letting SQLite create a file in the current directory.
+    /// missing, instead of letting the SQL client fall back to a local instance.
     /// </summary>
     private static string ObtenerCadenaConexion(IConfiguration configuracion) =>
         configuracion.GetConnectionString(NOMBRE_CADENA_CONEXION)
         ?? throw new InvalidOperationException(
             $"Falta la cadena de conexión '{NOMBRE_CADENA_CONEXION}' en la configuración (appsettings o variables de entorno).");
-
-    /// <summary>
-    /// Makes a relative SQLite path absolute (and creates its folder), so the
-    /// database always lands inside the project's <c>database/</c> directory no
-    /// matter which working directory launched the process.
-    /// </summary>
-    private static string ResolverCadenaConexion(string cadenaConexion, string directorioContenido)
-    {
-        const string PREFIJO = "Data Source=";
-
-        if (!cadenaConexion.StartsWith(PREFIJO, StringComparison.OrdinalIgnoreCase))
-        {
-            return cadenaConexion;
-        }
-
-        var ruta = cadenaConexion[PREFIJO.Length..].Trim();
-
-        if (Path.IsPathRooted(ruta) || ruta.Equals(":memory:", StringComparison.OrdinalIgnoreCase))
-        {
-            return cadenaConexion;
-        }
-
-        var rutaAbsoluta = ResolutorRutas.ResolverRutaEscritura(ruta, directorioContenido);
-        var directorio = Path.GetDirectoryName(rutaAbsoluta);
-
-        if (!string.IsNullOrWhiteSpace(directorio))
-        {
-            Directory.CreateDirectory(directorio);
-        }
-
-        return $"{PREFIJO}{rutaAbsoluta}";
-    }
 }

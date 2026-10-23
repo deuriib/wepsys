@@ -86,11 +86,15 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=120s --retries=10 \
 CMD ["dotnet", "watch", "run", "--project", "src/backend/SB.GestionSolicitudes.Servicios", "--no-launch-profile"]
 
 # ------------------------------------------------------------------------------
-# Final image: non-root, database folder ready to be backed by a volume.
+# Final image: non-root, writable folders for the plain-text catalog and the logs.
 # ------------------------------------------------------------------------------
 FROM base AS final
 WORKDIR /app
 COPY --from=publicacion --chown=app:app /app/publicacion .
+# `/app/database` holds the government-entities catalog (seeded from the published
+# `entidades-gubernamentales.seed.json`); `/app/logs` is where Serilog writes.
+# Relational data is not on disk here: it lives in the SQL Server instance the
+# connection string points to.
 RUN mkdir -p /app/database /app/logs \
     && chown -R app:app /app/database /app/logs
 USER app

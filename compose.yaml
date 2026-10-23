@@ -1,5 +1,6 @@
 # Production-like environment: `docker compose up --build`.
-# The API keeps its SQLite file and its plain-text catalog in the `datos-api`
+# The relational data lives in the `sqlserver` service, the API keeps the
+# plain-text government-entities catalog and its Serilog files in the `datos-api`
 # volume, and nginx serves the React bundle on the same origin.
 name: sb-gestion-solicitudes
 
@@ -15,13 +16,22 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       ASPNETCORE_URLS: http://+:8080
+      # The same image can point at any SQL Server. Credentials are required in
+      # `.env` and are never committed as defaults.
+      ConnectionStrings__BaseDatos: "Server=sqlserver,1433;Database=SBGestionSolicitudes;User Id=sa;Password=${SQLSERVER_CLAVE_SA:?Set SQLSERVER_CLAVE_SA in .env};Encrypt=True;TrustServerCertificate=True"
       # Production refuses to start without a key of at least 32 characters.
-      # Override it from your own `.env`; the fallback is a local demo value.
-      Jwt__ClaveSecreta: ${JWT_CLAVE_SECRETA:-clave-solo-para-docker-local-0123456789abcdef}
+      Jwt__ClaveSecreta: ${JWT_CLAVE_SECRETA:?Set JWT_CLAVE_SECRETA in .env}
       Cors__Origenes: ${CORS_ORIGENES:-http://localhost:8080,http://localhost:5173}
     ports:
       - "${PUERTO_API:-5080}:8080"
+    # The API applies its migrations and seed on startup, so it waits for a
+    # database that actually answers queries, not just for the container to exist.
+    depends_on:
+      sqlserver:
+        condition: service_healthy
     volumes:
+      # The plain-text catalog lives here. Relational data is in `sqlserver`, and
+      # the Serilog files stay inside the container.
       - datos-api:/app/database
     healthcheck:
       test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:8080/salud"]
@@ -29,6 +39,37 @@ services:
       timeout: 5s
       retries: 5
       start_period: 45s
+    restart: unless-stopped
+    networks:
+      - sb
+
+  # Local engine. Never expose it beyond a trusted network.
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      # Developer edition: free for development and test, not for production use.
+      MSSQL_PID: Developer
+      # SQL Server requires a complex password; supply it through `.env`.
+      MSSQL_SA_PASSWORD: ${SQLSERVER_CLAVE_SA:?Set SQLSERVER_CLAVE_SA in .env}
+    ports:
+      # Published so SSMS, Azure Data Studio or `dotnet run` on the host can reach
+      # the same instance the containers use.
+      - "${PUERTO_SQLSERVER:-1433}:1433"
+    volumes:
+      - datos-sqlserver:/var/opt/mssql
+    healthcheck:
+      # SQL Server has no HTTP endpoint, so sqlcmd is the only native probe. The
+      # 2022 image ships it under mssql-tools18 (not on PATH) and mints a
+      # self-signed certificate, hence the absolute path and `-C` (trust it).
+      # `-b` makes sqlcmd return a non-zero code when the query fails.
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -b -Q 'SELECT 1' -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      # First boot creates master/model/tempdb, which takes 20-30s; 60s also
+      # absorbs a cold or paused Docker Desktop on Windows.
+      start_period: 60s
     restart: unless-stopped
     networks:
       - sb
@@ -53,6 +94,8 @@ services:
 volumes:
   datos-api:
     name: sb-gestion-solicitudes-datos
+  datos-sqlserver:
+    name: sb-gestion-solicitudes-sqlserver
 
 networks:
   sb:

@@ -1,6 +1,13 @@
-# Runs the 118 automated tests inside the SDK image, with no local toolchain:
+# Runs the 127 automated tests inside the SDK image, with no local toolchain:
 #   docker compose -f compose.test.yaml run --rm pruebas
 # Exit code is the test runner's exit code, so it drops straight into CI.
+#
+# The integration tests need a SQL Server where they can create throwaway
+# databases. Locally (`dotnet test`) Testcontainers starts one automatically;
+# inside this runner there is no Docker socket, so the connection string is
+# injected and this file brings its own instance. After a run the container is
+# left up for the next run (no restart policy, so a reboot clears it); remove it
+# with `docker compose -f compose.test.yaml down`.
 name: sb-gestion-solicitudes-pruebas
 
 services:
@@ -14,3 +21,29 @@ services:
       ASPNETCORE_ENVIRONMENT: Testing
       DOTNET_CLI_TELEMETRY_OPTOUT: "1"
       DOTNET_NOLOGO: "1"
+      # The suite creates one `SbPruebas_<guid>` database per test, so it connects
+      # to master and reuses the name and credentials of this string. The runner has
+      # no Docker socket, so this variable is what selects the service container
+      # instead of the Testcontainers fallback used by a local `dotnet test`.
+      ConnectionStrings__BaseDatosPruebas: "Server=sqlserver,1433;Database=master;User Id=sa;Password=${SQLSERVER_CLAVE_SA:?Set SQLSERVER_CLAVE_SA in .env};Encrypt=True;TrustServerCertificate=True"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  # Same engine and probe as compose.yaml. No volume: the databases are born and
+  # die with the run, so a stale catalog can never make a later run pass or fail.
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${SQLSERVER_CLAVE_SA:?Set SQLSERVER_CLAVE_SA in .env}
+    healthcheck:
+      # sqlcmd lives in mssql-tools18 on the 2022 image; `-C` trusts the
+      # self-signed certificate and `-b` fails the probe when the query fails.
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -b -Q 'SELECT 1' -o /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      # First boot initializes master/model/tempdb; 60s absorbs a cold daemon.
+      start_period: 60s

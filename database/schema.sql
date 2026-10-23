@@ -1,149 +1,320 @@
 -- =============================================================================
--- SUPERINTENDENCIA DE BANCOS DE LA REPÚBLICA DOMINICANA (SB)
--- Plataforma de Gestión de Solicitudes Internas y Notificaciones
--- Esquema de Base de Datos Relacional (DDL)
+-- SUPERINTENDENCIA DE BANCOS DE LA REPUBLICA DOMINICANA (SB)
+-- Plataforma de Gestion de Solicitudes Internas y Notificaciones
+-- Esquema de Base de Datos Relacional para SQL Server (DDL)
 -- =============================================================================
--- Compatible con SQLite (ejecución por defecto) y convertible a SQL Server / Oracle.
--- Tablas normalizadas, restricciones de integridad referencial e índices de cobertura.
+-- GENERADO: `dotnet ef migrations script --idempotent` a partir de las migraciones
+-- de SB.GestionSolicitudes.Infraestructura. No editar a mano: todo cambio de modelo
+-- entra por una migracion de EF Core y este archivo se regenera con:
+--   dotnet ef migrations script --idempotent --project src/backend/SB.GestionSolicitudes.Infraestructura --startup-project src/backend/SB.GestionSolicitudes.Servicios --output database/schema.sql
+-- El API aplica las migraciones al arrancar (SemillaDatos), por lo que este script
+-- es el equivalente manual para una base vacia.
 -- =============================================================================
 
-PRAGMA foreign_keys = ON;
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
 
--- -----------------------------------------------------------------------------
--- Tabla: Areas
--- Catálogo de áreas organizacionales solicitantes y resolutoras
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS Areas (
-    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    Nombre TEXT NOT NULL,
-    Activa INTEGER NOT NULL DEFAULT 1
-);
+BEGIN TRANSACTION;
+GO
 
-CREATE UNIQUE INDEX IF NOT EXISTS IX_Areas_Nombre ON Areas (Nombre);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE TABLE [Areas] (
+        [Id] int NOT NULL IDENTITY,
+        [Nombre] nvarchar(120) NOT NULL,
+        [Activa] bit NOT NULL,
+        CONSTRAINT [PK_Areas] PRIMARY KEY ([Id])
+    );
+END;
+GO
 
--- -----------------------------------------------------------------------------
--- Tabla: TiposSolicitud
--- Catálogo de clasificación de solicitudes (Incidente, Requerimiento, Acceso, etc.)
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS TiposSolicitud (
-    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    Nombre TEXT NOT NULL,
-    Descripcion TEXT NOT NULL,
-    Activo INTEGER NOT NULL DEFAULT 1
-);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE TABLE [TiposSolicitud] (
+        [Id] int NOT NULL IDENTITY,
+        [Nombre] nvarchar(120) NOT NULL,
+        [Descripcion] nvarchar(300) NOT NULL,
+        [Activo] bit NOT NULL,
+        CONSTRAINT [PK_TiposSolicitud] PRIMARY KEY ([Id])
+    );
+END;
+GO
 
-CREATE UNIQUE INDEX IF NOT EXISTS IX_TiposSolicitud_Nombre ON TiposSolicitud (Nombre);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE TABLE [Usuarios] (
+        [Id] int NOT NULL IDENTITY,
+        [Nombre] nvarchar(150) NOT NULL,
+        [Correo] nvarchar(200) NOT NULL,
+        [HashContrasena] nvarchar(500) NOT NULL,
+        [Rol] int NOT NULL,
+        [Activo] bit NOT NULL,
+        [FechaCreacion] datetime2 NOT NULL,
+        CONSTRAINT [PK_Usuarios] PRIMARY KEY ([Id])
+    );
+END;
+GO
 
--- -----------------------------------------------------------------------------
--- Tabla: Usuarios
--- Registro de usuarios del sistema con roles:
--- 1: Administrador, 2: Analista, 3: Solicitante
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS Usuarios (
-    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    Nombre TEXT NOT NULL,
-    Correo TEXT NOT NULL,
-    HashContrasena TEXT NOT NULL,
-    Rol INTEGER NOT NULL,
-    Activo INTEGER NOT NULL DEFAULT 1,
-    FechaCreacion TEXT NOT NULL
-);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE TABLE [Solicitudes] (
+        [Id] int NOT NULL IDENTITY,
+        [Codigo] nvarchar(30) NOT NULL,
+        [Titulo] nvarchar(200) NOT NULL,
+        [Descripcion] nvarchar(4000) NOT NULL,
+        [Prioridad] int NOT NULL,
+        [Estado] int NOT NULL,
+        [FechaCreacion] datetime2 NOT NULL,
+        [FechaCompromiso] datetime2 NOT NULL,
+        [FechaCierre] datetime2 NULL,
+        [AreaId] int NOT NULL,
+        [TipoSolicitudId] int NOT NULL,
+        [SolicitanteId] int NOT NULL,
+        [ResponsableId] int NULL,
+        [UrlEvidencia] nvarchar(500) NULL,
+        [Secuencia] int NOT NULL,
+        CONSTRAINT [PK_Solicitudes] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_Solicitudes_Areas_AreaId] FOREIGN KEY ([AreaId]) REFERENCES [Areas] ([Id]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_Solicitudes_TiposSolicitud_TipoSolicitudId] FOREIGN KEY ([TipoSolicitudId]) REFERENCES [TiposSolicitud] ([Id]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_Solicitudes_Usuarios_ResponsableId] FOREIGN KEY ([ResponsableId]) REFERENCES [Usuarios] ([Id]) ON DELETE NO ACTION,
+        CONSTRAINT [FK_Solicitudes_Usuarios_SolicitanteId] FOREIGN KEY ([SolicitanteId]) REFERENCES [Usuarios] ([Id]) ON DELETE NO ACTION
+    );
+END;
+GO
 
-CREATE UNIQUE INDEX IF NOT EXISTS IX_Usuarios_Correo ON Usuarios (Correo);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE TABLE [Comentarios] (
+        [Id] int NOT NULL IDENTITY,
+        [SolicitudId] int NOT NULL,
+        [Texto] nvarchar(2000) NOT NULL,
+        [Visibilidad] int NOT NULL,
+        [Fecha] datetime2 NOT NULL,
+        [UsuarioId] int NOT NULL,
+        CONSTRAINT [PK_Comentarios] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_Comentarios_Solicitudes_SolicitudId] FOREIGN KEY ([SolicitudId]) REFERENCES [Solicitudes] ([Id]) ON DELETE CASCADE,
+        CONSTRAINT [FK_Comentarios_Usuarios_UsuarioId] FOREIGN KEY ([UsuarioId]) REFERENCES [Usuarios] ([Id]) ON DELETE NO ACTION
+    );
+END;
+GO
 
--- -----------------------------------------------------------------------------
--- Tabla: Solicitudes
--- Entidad principal de gestión de solicitudes internas
--- Prioridades: 1: Critica, 2: Alta, 3: Media, 4: Baja
--- Estados: 1: Registrada, 2: EnAnalisis, 3: EnProgreso, 4: EnEsperaDelSolicitante, 5: Resuelta, 6: Cerrada
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS Solicitudes (
-    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    Codigo TEXT NOT NULL,
-    Titulo TEXT NOT NULL,
-    Descripcion TEXT NOT NULL,
-    Prioridad INTEGER NOT NULL,
-    Estado INTEGER NOT NULL,
-    FechaCreacion TEXT NOT NULL,
-    FechaCompromiso TEXT NOT NULL,
-    FechaCierre TEXT NULL,
-    AreaId INTEGER NOT NULL,
-    TipoSolicitudId INTEGER NOT NULL,
-    SolicitanteId INTEGER NOT NULL,
-    ResponsableId INTEGER NULL,
-    UrlEvidencia TEXT NULL,
-    Secuencia INTEGER NOT NULL,
-    CONSTRAINT FK_Solicitudes_Areas_AreaId FOREIGN KEY (AreaId) REFERENCES Areas (Id) ON DELETE RESTRICT,
-    CONSTRAINT FK_Solicitudes_TiposSolicitud_TipoSolicitudId FOREIGN KEY (TipoSolicitudId) REFERENCES TiposSolicitud (Id) ON DELETE RESTRICT,
-    CONSTRAINT FK_Solicitudes_Usuarios_SolicitanteId FOREIGN KEY (SolicitanteId) REFERENCES Usuarios (Id) ON DELETE RESTRICT,
-    CONSTRAINT FK_Solicitudes_Usuarios_ResponsableId FOREIGN KEY (ResponsableId) REFERENCES Usuarios (Id) ON DELETE RESTRICT
-);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE TABLE [HistorialesEstado] (
+        [Id] int NOT NULL IDENTITY,
+        [SolicitudId] int NOT NULL,
+        [EstadoAnterior] int NULL,
+        [EstadoNuevo] int NOT NULL,
+        [Fecha] datetime2 NOT NULL,
+        [UsuarioId] int NOT NULL,
+        [Comentario] nvarchar(2000) NULL,
+        CONSTRAINT [PK_HistorialesEstado] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_HistorialesEstado_Solicitudes_SolicitudId] FOREIGN KEY ([SolicitudId]) REFERENCES [Solicitudes] ([Id]) ON DELETE CASCADE,
+        CONSTRAINT [FK_HistorialesEstado_Usuarios_UsuarioId] FOREIGN KEY ([UsuarioId]) REFERENCES [Usuarios] ([Id]) ON DELETE NO ACTION
+    );
+END;
+GO
 
-CREATE UNIQUE INDEX IF NOT EXISTS IX_Solicitudes_Codigo ON Solicitudes (Codigo);
-CREATE INDEX IF NOT EXISTS IX_Solicitudes_AreaId ON Solicitudes (AreaId);
-CREATE INDEX IF NOT EXISTS IX_Solicitudes_TipoSolicitudId ON Solicitudes (TipoSolicitudId);
-CREATE INDEX IF NOT EXISTS IX_Solicitudes_SolicitanteId ON Solicitudes (SolicitanteId);
-CREATE INDEX IF NOT EXISTS IX_Solicitudes_ResponsableId ON Solicitudes (ResponsableId);
-CREATE INDEX IF NOT EXISTS IX_Solicitudes_Estado ON Solicitudes (Estado);
-CREATE INDEX IF NOT EXISTS IX_Solicitudes_FechaCompromiso ON Solicitudes (FechaCompromiso);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE TABLE [Notificaciones] (
+        [Id] int NOT NULL IDENTITY,
+        [SolicitudId] int NOT NULL,
+        [DestinatarioId] int NOT NULL,
+        [Canal] int NOT NULL,
+        [Asunto] nvarchar(200) NOT NULL,
+        [Mensaje] nvarchar(1000) NOT NULL,
+        [Estado] int NOT NULL,
+        [Fecha] datetime2 NOT NULL,
+        [Leida] bit NOT NULL,
+        CONSTRAINT [PK_Notificaciones] PRIMARY KEY ([Id]),
+        CONSTRAINT [FK_Notificaciones_Solicitudes_SolicitudId] FOREIGN KEY ([SolicitudId]) REFERENCES [Solicitudes] ([Id]) ON DELETE CASCADE,
+        CONSTRAINT [FK_Notificaciones_Usuarios_DestinatarioId] FOREIGN KEY ([DestinatarioId]) REFERENCES [Usuarios] ([Id]) ON DELETE NO ACTION
+    );
+END;
+GO
 
--- -----------------------------------------------------------------------------
--- Tabla: Comentarios
--- Comentarios asociados a la solicitud con visibilidad:
--- 1: Publica (visible para solicitante y equipo), 2: Interna (solo analistas y admin)
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS Comentarios (
-    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    SolicitudId INTEGER NOT NULL,
-    Texto TEXT NOT NULL,
-    Visibilidad INTEGER NOT NULL,
-    Fecha TEXT NOT NULL,
-    UsuarioId INTEGER NOT NULL,
-    CONSTRAINT FK_Comentarios_Solicitudes_SolicitudId FOREIGN KEY (SolicitudId) REFERENCES Solicitudes (Id) ON DELETE CASCADE,
-    CONSTRAINT FK_Comentarios_Usuarios_UsuarioId FOREIGN KEY (UsuarioId) REFERENCES Usuarios (Id) ON DELETE RESTRICT
-);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_Areas_Nombre] ON [Areas] ([Nombre]);
+END;
+GO
 
-CREATE INDEX IF NOT EXISTS IX_Comentarios_SolicitudId_Fecha ON Comentarios (SolicitudId, Fecha);
-CREATE INDEX IF NOT EXISTS IX_Comentarios_UsuarioId ON Comentarios (UsuarioId);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Comentarios_SolicitudId_Fecha] ON [Comentarios] ([SolicitudId], [Fecha]);
+END;
+GO
 
--- -----------------------------------------------------------------------------
--- Tabla: HistorialesEstado
--- Pista de auditoría y trazabilidad de cada transición de ciclo de vida
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS HistorialesEstado (
-    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    SolicitudId INTEGER NOT NULL,
-    EstadoAnterior INTEGER NULL,
-    EstadoNuevo INTEGER NOT NULL,
-    Fecha TEXT NOT NULL,
-    UsuarioId INTEGER NOT NULL,
-    Comentario TEXT NULL,
-    CONSTRAINT FK_HistorialesEstado_Solicitudes_SolicitudId FOREIGN KEY (SolicitudId) REFERENCES Solicitudes (Id) ON DELETE CASCADE,
-    CONSTRAINT FK_HistorialesEstado_Usuarios_UsuarioId FOREIGN KEY (UsuarioId) REFERENCES Usuarios (Id) ON DELETE RESTRICT
-);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Comentarios_UsuarioId] ON [Comentarios] ([UsuarioId]);
+END;
+GO
 
-CREATE INDEX IF NOT EXISTS IX_HistorialesEstado_SolicitudId_Fecha ON HistorialesEstado (SolicitudId, Fecha);
-CREATE INDEX IF NOT EXISTS IX_HistorialesEstado_UsuarioId ON HistorialesEstado (UsuarioId);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_HistorialesEstado_SolicitudId_Fecha] ON [HistorialesEstado] ([SolicitudId], [Fecha]);
+END;
+GO
 
--- -----------------------------------------------------------------------------
--- Tabla: Notificaciones
--- Registro de eventos y avisos generados por el ciclo de solicitudes
--- Canales: 1: BaseDeDatos, 2: CorreoSimulado, 3: Consola
--- Estados: 1: Pendiente, 2: Enviada, 3: Fallida
--- -----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS Notificaciones (
-    Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    SolicitudId INTEGER NOT NULL,
-    DestinatarioId INTEGER NOT NULL,
-    Canal INTEGER NOT NULL,
-    Asunto TEXT NOT NULL,
-    Mensaje TEXT NOT NULL,
-    Estado INTEGER NOT NULL,
-    Fecha TEXT NOT NULL,
-    Leida INTEGER NOT NULL DEFAULT 0,
-    CONSTRAINT FK_Notificaciones_Solicitudes_SolicitudId FOREIGN KEY (SolicitudId) REFERENCES Solicitudes (Id) ON DELETE CASCADE,
-    CONSTRAINT FK_Notificaciones_Usuarios_DestinatarioId FOREIGN KEY (DestinatarioId) REFERENCES Usuarios (Id) ON DELETE RESTRICT
-);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_HistorialesEstado_UsuarioId] ON [HistorialesEstado] ([UsuarioId]);
+END;
+GO
 
-CREATE INDEX IF NOT EXISTS IX_Notificaciones_DestinatarioId_Leida ON Notificaciones (DestinatarioId, Leida);
-CREATE INDEX IF NOT EXISTS IX_Notificaciones_SolicitudId ON Notificaciones (SolicitudId);
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Notificaciones_DestinatarioId_Leida] ON [Notificaciones] ([DestinatarioId], [Leida]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Notificaciones_SolicitudId] ON [Notificaciones] ([SolicitudId]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Solicitudes_AreaId] ON [Solicitudes] ([AreaId]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_Solicitudes_Codigo] ON [Solicitudes] ([Codigo]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Solicitudes_Estado] ON [Solicitudes] ([Estado]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Solicitudes_FechaCompromiso] ON [Solicitudes] ([FechaCompromiso]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Solicitudes_ResponsableId] ON [Solicitudes] ([ResponsableId]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Solicitudes_SolicitanteId] ON [Solicitudes] ([SolicitanteId]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE INDEX [IX_Solicitudes_TipoSolicitudId] ON [Solicitudes] ([TipoSolicitudId]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_TiposSolicitud_Nombre] ON [TiposSolicitud] ([Nombre]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_Usuarios_Correo] ON [Usuarios] ([Correo]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261023020513_Inicial'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261023020513_Inicial', N'8.0.10');
+END;
+GO
+
+COMMIT;
+GO

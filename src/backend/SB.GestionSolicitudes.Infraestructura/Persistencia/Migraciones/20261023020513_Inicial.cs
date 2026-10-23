@@ -15,10 +15,10 @@ namespace SB.GestionSolicitudes.Infraestructura.Persistencia.Migraciones
                 name: "Areas",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", maxLength: 120, nullable: false),
-                    Activa = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Activa = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,11 +29,11 @@ namespace SB.GestionSolicitudes.Infraestructura.Persistencia.Migraciones
                 name: "TiposSolicitud",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", maxLength: 120, nullable: false),
-                    Descripcion = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
-                    Activo = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,14 +44,14 @@ namespace SB.GestionSolicitudes.Infraestructura.Persistencia.Migraciones
                 name: "Usuarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    Correo = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    HashContrasena = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
-                    Rol = table.Column<int>(type: "INTEGER", nullable: false),
-                    Activo = table.Column<bool>(type: "INTEGER", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Correo = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    HashContrasena = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Rol = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,22 +62,22 @@ namespace SB.GestionSolicitudes.Infraestructura.Persistencia.Migraciones
                 name: "Solicitudes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Codigo = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
-                    Titulo = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Descripcion = table.Column<string>(type: "TEXT", maxLength: 4000, nullable: false),
-                    Prioridad = table.Column<int>(type: "INTEGER", nullable: false),
-                    Estado = table.Column<int>(type: "INTEGER", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    FechaCompromiso = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    FechaCierre = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    AreaId = table.Column<int>(type: "INTEGER", nullable: false),
-                    TipoSolicitudId = table.Column<int>(type: "INTEGER", nullable: false),
-                    SolicitanteId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ResponsableId = table.Column<int>(type: "INTEGER", nullable: true),
-                    UrlEvidencia = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    Secuencia = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Codigo = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Descripcion = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    Prioridad = table.Column<int>(type: "int", nullable: false),
+                    Estado = table.Column<int>(type: "int", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaCompromiso = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaCierre = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AreaId = table.Column<int>(type: "int", nullable: false),
+                    TipoSolicitudId = table.Column<int>(type: "int", nullable: false),
+                    SolicitanteId = table.Column<int>(type: "int", nullable: false),
+                    ResponsableId = table.Column<int>(type: "int", nullable: true),
+                    UrlEvidencia = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Secuencia = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -112,13 +112,13 @@ namespace SB.GestionSolicitudes.Infraestructura.Persistencia.Migraciones
                 name: "Comentarios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    SolicitudId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Texto = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false),
-                    Visibilidad = table.Column<int>(type: "INTEGER", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UsuarioId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolicitudId = table.Column<int>(type: "int", nullable: false),
+                    Texto = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    Visibilidad = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,14 +141,14 @@ namespace SB.GestionSolicitudes.Infraestructura.Persistencia.Migraciones
                 name: "HistorialesEstado",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    SolicitudId = table.Column<int>(type: "INTEGER", nullable: false),
-                    EstadoAnterior = table.Column<int>(type: "INTEGER", nullable: true),
-                    EstadoNuevo = table.Column<int>(type: "INTEGER", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UsuarioId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Comentario = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolicitudId = table.Column<int>(type: "int", nullable: false),
+                    EstadoAnterior = table.Column<int>(type: "int", nullable: true),
+                    EstadoNuevo = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Comentario = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,16 +171,16 @@ namespace SB.GestionSolicitudes.Infraestructura.Persistencia.Migraciones
                 name: "Notificaciones",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    SolicitudId = table.Column<int>(type: "INTEGER", nullable: false),
-                    DestinatarioId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Canal = table.Column<int>(type: "INTEGER", nullable: false),
-                    Asunto = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    Mensaje = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
-                    Estado = table.Column<int>(type: "INTEGER", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Leida = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SolicitudId = table.Column<int>(type: "int", nullable: false),
+                    DestinatarioId = table.Column<int>(type: "int", nullable: false),
+                    Canal = table.Column<int>(type: "int", nullable: false),
+                    Asunto = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Mensaje = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Estado = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Leida = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

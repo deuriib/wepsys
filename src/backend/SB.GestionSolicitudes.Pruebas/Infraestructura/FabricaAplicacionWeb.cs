@@ -6,20 +6,22 @@ using Microsoft.Extensions.Configuration;
 namespace SB.GestionSolicitudes.Pruebas.Infraestructura;
 
 /// <summary>
-/// Boots the real API with an isolated SQLite database and an isolated plain-text
+/// Boots the real API with an isolated SQL Server database and an isolated plain-text
 /// catalog, so integration tests can run in parallel and never touch the
-/// developer's data.
+/// developer's data. The engine is a Testcontainers instance unless
+/// <c>ConnectionStrings__BaseDatosPruebas</c> points somewhere else.
 /// </summary>
 public sealed class FabricaAplicacionWeb : WebApplicationFactory<Program>
 {
     public const string CLAVE_JWT_PRUEBAS = "clave-de-pruebas-integracion-0123456789abcdef";
 
+    private readonly string _nombreBaseDatos;
+    private readonly string _cadenaConexion;
     private readonly string _directorioTrabajo = Path.Combine(
         Path.GetTempPath(),
         "sb-gestion-solicitudes-pruebas",
         Guid.NewGuid().ToString("N"));
 
-    private readonly string _rutaBaseDatos;
     private readonly string _rutaEntidades;
     private readonly string _rutaSemilla;
 
@@ -27,11 +29,14 @@ public sealed class FabricaAplicacionWeb : WebApplicationFactory<Program>
     {
         Directory.CreateDirectory(_directorioTrabajo);
 
-        _rutaBaseDatos = Path.Combine(_directorioTrabajo, "pruebas.db");
         _rutaEntidades = Path.Combine(_directorioTrabajo, "entidades-gubernamentales.json");
         _rutaSemilla = Path.Combine(_directorioTrabajo, "entidades-gubernamentales.seed.json");
 
         File.WriteAllText(_rutaSemilla, ConstruirSemillaEntidades());
+
+        // The database is created before the host starts, because the API applies the
+        // migrations and the seed during startup.
+        (_nombreBaseDatos, _cadenaConexion) = BaseDatosPruebas.Crear();
     }
 
     public string RutaArchivoEntidades => _rutaEntidades;
@@ -43,7 +48,7 @@ public sealed class FabricaAplicacionWeb : WebApplicationFactory<Program>
         {
             configuracion.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["ConnectionStrings:BaseDatos"] = $"Data Source={_rutaBaseDatos}",
+                ["ConnectionStrings:BaseDatos"] = _cadenaConexion,
                 ["AlmacenEntidadesGubernamentales:RutaArchivo"] = _rutaEntidades,
                 ["AlmacenEntidadesGubernamentales:RutaSemilla"] = _rutaSemilla,
                 ["Jwt:ClaveSecreta"] = CLAVE_JWT_PRUEBAS,
@@ -63,6 +68,8 @@ public sealed class FabricaAplicacionWeb : WebApplicationFactory<Program>
         {
             return;
         }
+
+        BaseDatosPruebas.Eliminar(_nombreBaseDatos);
 
         try
         {

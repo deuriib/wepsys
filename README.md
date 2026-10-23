@@ -49,8 +49,15 @@ La plataforma implementa un sistema empresarial para registrar, dar seguimiento,
 │   │   ├── SB.GestionSolicitudes.Aplicacion/# Casos de uso, DTOs, Contratos e Interfaces
 │   │   ├── SB.GestionSolicitudes.Infraestructura/ # EF Core, Archivo plano, Seguridad, Canales
 │   │   ├── SB.GestionSolicitudes.Servicios/ # ASP.NET Core Web API, Middlewares, Controllers
+│   │   │   └── Dockerfile                   # Imagen multi-etapa del API (runtime, pruebas, desarrollo)
 │   │   └── SB.GestionSolicitudes.Pruebas/   # Suite de 118 Pruebas Unitarias e Integración
 │   └── frontend/                            # Aplicación React + TypeScript + Vite + Tailwind
+│       ├── Dockerfile                       # Imagen multi-etapa (build, desarrollo, nginx)
+│       └── nginx.conf                       # Servidor estático + proxy hacia el API
+├── compose.yaml                             # Entorno tipo producción (API + Web)
+├── compose.dev.yaml                         # Superposición de desarrollo con recarga en caliente
+├── compose.test.yaml                        # Ejecutor de la suite de pruebas en contenedor
+├── .env.example                             # Variables de Compose documentadas
 └── README.md                                # Documentación de inicio rápido
 ```
 
@@ -61,6 +68,7 @@ La plataforma implementa un sistema empresarial para registrar, dar seguimiento,
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js 18+](https://nodejs.org/) (recomendado v20 o v24)
 - Git
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) con Compose v2.24+ *(solo para la ejecución containerizada)*
 
 ---
 
@@ -112,7 +120,59 @@ npm run build
 
 ---
 
-### 3. Base de Datos y Migraciones
+### 3. Todo el Stack con Docker (API + Web)
+
+La ruta más rápida para levantar la plataforma completa sin instalar .NET ni Node. El API corre en la imagen `aspnet:8.0.32` con un usuario sin privilegios y la web se sirve con nginx, que además actúa como proxy inverso de `/api` y `/salud`.
+
+```bash
+# 1. Variables opcionales (todas tienen valores por defecto)
+cp .env.example .env
+
+# 2. Construir y levantar ambos servicios
+docker compose up --build -d
+```
+
+| Servicio | URL | Descripción |
+| :--- | :--- | :--- |
+| **Web** | `http://localhost:8080` | Aplicación React servida por nginx |
+| **API** | `http://localhost:5080` | API REST sin intermediarios |
+| **Swagger** | `http://localhost:5080/swagger` | Documentación interactiva |
+| **Scalar** | `http://localhost:5080/docs/v1` | Documentación alternativa |
+| **Salud** | `http://localhost:5080/salud` | Sonda usada por los healthchecks |
+
+Notas de operación:
+
+- **Persistencia:** el API guarda la base SQLite y el catálogo de entidades en el volumen `sb-gestion-solicitudes-datos` (montado en `/app/database`), inicializado desde `entidades-gubernamentales.seed.json` en el primer arranque. Para reiniciar desde cero: `docker compose down -v`.
+- **Secreto JWT:** en `Production` el API exige `JWT_CLAVE_SECRETA` de 32 caracteres o más. El valor por defecto solo sirve para una demo local; cámbielo en su `.env` antes de publicar la imagen.
+- **Logs:** Serilog escribe en consola (visible con `docker compose logs -f api`) y en `/app/logs` dentro del contenedor.
+- **Puertos:** se ajustan con `PUERTO_API` y `PUERTO_WEB` en el archivo `.env`.
+- **Versiones reproducibles:** las imágenes fijan el mismo toolchain declarado en `mise.toml` (SDK `8.0.426` con runtime ASP.NET Core `8.0.32`, Node `24.22.1`), para que el contenedor y la máquina local compilen con versiones idénticas.
+
+#### Entorno de desarrollo con recarga en caliente
+
+Compone la misma definición base con la superposición de desarrollo: el API corre con `dotnet watch` y la web con el servidor de Vite.
+
+```bash
+docker compose -f compose.yaml -f compose.dev.yaml up --build
+```
+
+- Web: `http://localhost:5173`
+- API: `http://localhost:5080`
+- El directorio `database/` del repositorio se monta en el contenedor, por lo que se comparte el mismo archivo plano que en la ejecución local.
+- Los artefactos de compilación (`bin/`, `obj/`) y las dependencias de Node viven en volúmenes propios del contenedor, de modo que el entorno de desarrollo no contamina ni sobrescribe lo compilado en Windows.
+- Si cambian `package.json` o `package-lock.json`, reconstruya la imagen web: `docker compose -f compose.yaml -f compose.dev.yaml up --build`.
+
+#### Pruebas automatizadas en contenedor
+
+```bash
+docker compose -f compose.test.yaml run --rm pruebas
+```
+
+La etapa `pruebas` del Dockerfile compila y ejecuta los 118 tests con el SDK oficial; el código de salida del contenedor es el de `dotnet test`.
+
+---
+
+### 4. Base de Datos y Migraciones
 
 La base de datos relacional opera sobre SQLite por defecto (configurable a SQL Server / Oracle en `appsettings.json`).
 

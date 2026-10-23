@@ -76,3 +76,21 @@ El sistema implementa autenticación basada en **JSON Web Tokens (JWT)** firmado
 3. **Result Pattern**: Respuestas tipadas de éxito o error de dominio (`Resultado.Exito`, `Resultado.Falla`), reduciendo sobrecosto de excepciones.
 4. **Strategy / Channel Pattern para Notificaciones**: `INotificadorSolicitud` distribuye eventos a múltiples implementaciones de `ICanalNotificacion`. Agregar un canal de colas (RabbitMQ / Azure Service Bus) solo requiere crear una clase sin modificar el flujo de negocio.
 5. **Dependency Injection**: Inversión de control estricta con registro modular por capa (`AgregarAplicacion()`, `AgregarInfraestructura()`).
+
+---
+
+## 5. Despliegue en Contenedores
+
+La plataforma se empaqueta en dos imágenes multi-etapa, orquestadas por Docker Compose en tres entornos (`compose.yaml`, `compose.dev.yaml` y `compose.test.yaml`).
+
+| Aspecto | Decisión | Motivo |
+| :--- | :--- | :--- |
+| **Imagen del API** | Etapas `dependencias` → `origen` → `publicacion` / `pruebas` / `desarrollo` → `final` | El artefacto publicado no arrastra el SDK; restaurar solo los `.csproj` mantiene la caché de NuGet entre cambios de código. |
+| **Toolchain** | SDK `8.0.426`, runtime ASP.NET Core `8.0.32` y Node `24.22.1` fijados como `ARG` en los Dockerfiles | Idénticas a las versiones de `mise.toml`: lo que compila en el contenedor compila igual en la máquina local. |
+| **Usuario de ejecución** | `app` (no root) en la imagen final | Reduce el impacto de una vulnerabilidad en la aplicación. |
+| **Persistencia** | Volumen `sb-gestion-solicitudes-datos` sobre `/app/database` | El archivo plano y la base SQLite sobreviven a recreaciones del contenedor y se inicializan desde la semilla incluida en la imagen. |
+| **Rutas configurables** | `Jwt__ClaveSecreta`, `Cors__Origenes`, `ConnectionStrings__BaseDatos` vía variables de entorno | La configuración de .NET mapea `Seccion__Clave`; los `appsettings*.json` quedan como valores por defecto. |
+| **Web** | Bundle compilado servido por nginx con `try_files` y proxy a `/api` y `/salud` | Un solo origen para el navegador: sin CORS en el camino principal y soporte de rutas del lado del cliente. |
+| **Observabilidad** | `HEALTHCHECK` contra `/salud` en ambos servicios | Compose arranca nginx solo cuando el API está sano, evitando el error clásico de DNS "host not found in upstream". |
+| **Entorno de desarrollo** | `dotnet watch` + servidor de Vite con montajes del código | Recarga en caliente sin instalar el toolchain y con el `database/` del repositorio compartido. |
+| **Pruebas** | Etapa `pruebas` ejecutada como servicio de un solo uso | El pipeline valida los 118 tests con el mismo runtime de la imagen, sin depender del SDK local. |

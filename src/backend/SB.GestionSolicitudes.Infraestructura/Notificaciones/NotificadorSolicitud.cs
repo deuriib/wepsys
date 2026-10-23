@@ -5,9 +5,9 @@ using SB.GestionSolicitudes.Dominio.Notificaciones;
 namespace SB.GestionSolicitudes.Infraestructura.Notificaciones;
 
 /// <summary>
-/// Dispatches a business event to every registered channel and persists the
-/// outcome. Failures are recorded as <see cref="EstadoNotificacion.Fallida"/> and
-/// never bubble up, so a broken email provider cannot break the workflow.
+/// Dispatches a business event to every registered channel and persists a single
+/// in-app notification per recipient for the inbox. Failures on external channels
+/// are logged and never bubble up, so a broken provider cannot break the workflow.
 /// </summary>
 public sealed class NotificadorSolicitud : INotificadorSolicitud
 {
@@ -66,24 +66,23 @@ public sealed class NotificadorSolicitud : INotificadorSolicitud
 
                 var destinatario = new DestinatarioNotificacion(usuario.Id, usuario.Nombre, usuario.Correo);
 
+                var notificacion = new Notificacion
+                {
+                    SolicitudId = evento.SolicitudId,
+                    DestinatarioId = usuario.Id,
+                    Canal = CanalNotificacion.BaseDatos,
+                    Asunto = Truncar(asunto, Notificacion.LONGITUD_MAXIMA_ASUNTO),
+                    Mensaje = Truncar(mensaje, Notificacion.LONGITUD_MAXIMA_MENSAJE),
+                    Estado = EstadoNotificacion.Enviada,
+                    Fecha = _reloj.Ahora,
+                    Leida = false
+                };
+
+                await _notificaciones.AgregarAsync(notificacion, cancellationToken);
+
                 foreach (var canal in canales)
                 {
-                    var notificacion = new Notificacion
-                    {
-                        SolicitudId = evento.SolicitudId,
-                        DestinatarioId = usuario.Id,
-                        Canal = canal.Canal,
-                        Asunto = Truncar(asunto, Notificacion.LONGITUD_MAXIMA_ASUNTO),
-                        Mensaje = Truncar(mensaje, Notificacion.LONGITUD_MAXIMA_MENSAJE),
-                        Estado = EstadoNotificacion.Pendiente,
-                        Fecha = _reloj.Ahora,
-                        Leida = false
-                    };
-
-                    var enviada = await IntentarEnviarAsync(canal, notificacion, destinatario, cancellationToken);
-                    notificacion.Estado = enviada ? EstadoNotificacion.Enviada : EstadoNotificacion.Fallida;
-
-                    await _notificaciones.AgregarAsync(notificacion, cancellationToken);
+                    await IntentarEnviarAsync(canal, notificacion, destinatario, cancellationToken);
                 }
             }
 

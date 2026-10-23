@@ -27,7 +27,8 @@ public sealed class NotificacionRepositorio : INotificacionRepositorio
         var consulta = _contexto.Notificaciones
             .AsNoTracking()
             .Include(notificacion => notificacion.Solicitud)
-            .Where(notificacion => notificacion.DestinatarioId == usuarioId);
+            .Where(notificacion => notificacion.DestinatarioId == usuarioId
+                                && notificacion.Canal == CanalNotificacion.BaseDatos);
 
         if (soloNoLeidas)
         {

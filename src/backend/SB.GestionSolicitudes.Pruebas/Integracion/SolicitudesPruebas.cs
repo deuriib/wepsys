@@ -439,6 +439,7 @@ public sealed class SolicitudesPruebas
 
         notificaciones.ShouldNotBeNull();
         notificaciones.ShouldContain(notificacion => notificacion.SolicitudId == id);
+        notificaciones.Count(notificacion => notificacion.SolicitudId == id).ShouldBe(1);
     }
 
     private static Dictionary<string, object?> ConstruirPeticion() => new()

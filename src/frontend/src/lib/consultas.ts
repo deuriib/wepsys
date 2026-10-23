@@ -1,15 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSesion } from '../sesion/ContextoSesion';
 import type {
+  ActualizarArea,
   ActualizarEntidad,
+  ActualizarOpcionCatalogo,
   ActualizarSolicitud,
+  ActualizarTipoSolicitud,
   ActualizarUsuario,
+  CrearArea,
   CrearEntidad,
   CrearSolicitud,
+  CrearTipoSolicitud,
   CrearUsuario,
   EstadoSolicitud,
   FiltrosEntidad,
   FiltrosSolicitud,
+  TipoCatalogoEntidad,
   VisibilidadComentario
 } from './tipos';
 
@@ -305,6 +311,153 @@ export function useActualizarUsuarioMutation() {
     onSuccess: () => {
       void clienteQuery.invalidateQueries({ queryKey: claves.usuarios });
       void clienteQuery.invalidateQueries({ queryKey: claves.responsables });
+    }
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Catálogos — Áreas (admin: incluye inactivas)
+// -----------------------------------------------------------------------------
+
+export const CLAVE_AREAS_ADMIN = ['catalogos', 'areas', 'admin'] as const;
+export const CLAVE_TIPOS_ADMIN = ['catalogos', 'tipos-solicitud', 'admin'] as const;
+
+export function useAreasAdmin() {
+  const { cliente, usuario } = useSesion();
+
+  return useQuery({
+    queryKey: CLAVE_AREAS_ADMIN,
+    queryFn: () => cliente.obtenerAreas(false),
+    enabled: Boolean(usuario && usuario.rol === 'Administrador')
+  });
+}
+
+export function useTiposSolicitudAdmin() {
+  const { cliente, usuario } = useSesion();
+
+  return useQuery({
+    queryKey: CLAVE_TIPOS_ADMIN,
+    queryFn: () => cliente.obtenerTiposSolicitud(false),
+    enabled: Boolean(usuario && usuario.rol === 'Administrador')
+  });
+}
+
+export function useCrearAreaMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: (peticion: CrearArea) => cliente.crearArea(peticion),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: ['catalogos', 'areas'] });
+    }
+  });
+}
+
+export function useActualizarAreaMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, peticion }: { id: number; peticion: ActualizarArea }) =>
+      cliente.actualizarArea(id, peticion),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: ['catalogos', 'areas'] });
+    }
+  });
+}
+
+export function useEliminarAreaMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => cliente.eliminarArea(id),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: ['catalogos', 'areas'] });
+    }
+  });
+}
+
+export function useCrearTipoSolicitudMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: (peticion: CrearTipoSolicitud) => cliente.crearTipoSolicitud(peticion),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: ['catalogos', 'tipos-solicitud'] });
+    }
+  });
+}
+
+export function useActualizarTipoSolicitudMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, peticion }: { id: number; peticion: ActualizarTipoSolicitud }) =>
+      cliente.actualizarTipoSolicitud(id, peticion),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: ['catalogos', 'tipos-solicitud'] });
+    }
+  });
+}
+
+export function useEliminarTipoSolicitudMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: number) => cliente.eliminarTipoSolicitud(id),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: ['catalogos', 'tipos-solicitud'] });
+    }
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Opciones de Catálogo de Entidades (Categorías, Sectores, Poderes del Estado)
+// -----------------------------------------------------------------------------
+
+export function useCrearOpcionCatalogoMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ tipo, valor }: { tipo: TipoCatalogoEntidad; valor: string }) =>
+      cliente.crearOpcionCatalogo(tipo, valor),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: claves.opcionesEntidades });
+      void clienteQuery.invalidateQueries({ queryKey: ['entidades'] });
+    }
+  });
+}
+
+export function useActualizarOpcionCatalogoMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ tipo, peticion }: { tipo: TipoCatalogoEntidad; peticion: ActualizarOpcionCatalogo }) =>
+      cliente.actualizarOpcionCatalogo(tipo, peticion),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: claves.opcionesEntidades });
+      void clienteQuery.invalidateQueries({ queryKey: ['entidades'] });
+    }
+  });
+}
+
+export function useEliminarOpcionCatalogoMutation() {
+  const { cliente } = useSesion();
+  const clienteQuery = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ tipo, valor }: { tipo: TipoCatalogoEntidad; valor: string }) =>
+      cliente.eliminarOpcionCatalogo(tipo, valor),
+    onSuccess: () => {
+      void clienteQuery.invalidateQueries({ queryKey: claves.opcionesEntidades });
+      void clienteQuery.invalidateQueries({ queryKey: ['entidades'] });
     }
   });
 }

@@ -1,10 +1,15 @@
 import type {
+  ActualizarArea,
   ActualizarEntidad,
+  ActualizarOpcionCatalogo,
   ActualizarSolicitud,
+  ActualizarTipoSolicitud,
   ActualizarUsuario,
   Area,
+  CrearArea,
   CrearEntidad,
   CrearSolicitud,
+  CrearTipoSolicitud,
   CrearUsuario,
   EntidadGubernamental,
   EstadoSolicitud,
@@ -17,6 +22,7 @@ import type {
   RespuestaAutenticacion,
   SolicitudDetalle,
   SolicitudResumen,
+  TipoCatalogoEntidad,
   TipoSolicitud,
   Usuario,
   VisibilidadComentario
@@ -117,7 +123,7 @@ function cadenaConsultaLimpia(valores: Record<string, string | number | boolean 
   const parametros = new URLSearchParams();
 
   Object.entries(valores).forEach(([clave, valor]) => {
-    if (valor !== undefined && valor !== '' && valor !== false) {
+    if (valor !== undefined && valor !== '') {
       parametros.set(clave, String(valor));
     }
   });
@@ -142,8 +148,17 @@ export interface ClienteApi {
   actualizarEntidad(id: string, peticion: ActualizarEntidad): Promise<EntidadGubernamental>;
   eliminarEntidad(id: string): Promise<void>;
   obtenerOpcionesEntidades(): Promise<OpcionesFiltroEntidades>;
-  obtenerAreas(): Promise<Area[]>;
-  obtenerTiposSolicitud(): Promise<TipoSolicitud[]>;
+  crearOpcionCatalogo(tipo: TipoCatalogoEntidad, valor: string): Promise<void>;
+  actualizarOpcionCatalogo(tipo: TipoCatalogoEntidad, peticion: ActualizarOpcionCatalogo): Promise<void>;
+  eliminarOpcionCatalogo(tipo: TipoCatalogoEntidad, valor: string): Promise<void>;
+  obtenerAreas(soloActivas?: boolean): Promise<Area[]>;
+  crearArea(peticion: CrearArea): Promise<Area>;
+  actualizarArea(id: number, peticion: ActualizarArea): Promise<Area>;
+  eliminarArea(id: number): Promise<void>;
+  obtenerTiposSolicitud(soloActivos?: boolean): Promise<TipoSolicitud[]>;
+  crearTipoSolicitud(peticion: CrearTipoSolicitud): Promise<TipoSolicitud>;
+  actualizarTipoSolicitud(id: number, peticion: ActualizarTipoSolicitud): Promise<TipoSolicitud>;
+  eliminarTipoSolicitud(id: number): Promise<void>;
   obtenerUsuarios(): Promise<Usuario[]>;
   obtenerResponsables(): Promise<Usuario[]>;
   crearUsuario(peticion: CrearUsuario): Promise<Usuario>;
@@ -247,9 +262,58 @@ export function crearCliente(token: string | null): ClienteApi {
     obtenerOpcionesEntidades: () =>
       pedir<OpcionesFiltroEntidades>('/api/entidades-gubernamentales/opciones-filtro'),
 
-    obtenerAreas: () => pedir<Area[]>('/api/catalogos/areas'),
+    crearOpcionCatalogo: (tipo, valor) =>
+      pedir<void>(`/api/entidades-gubernamentales/catalogos/${tipo}`, {
+        method: 'POST',
+        body: JSON.stringify({ valor })
+      }),
 
-    obtenerTiposSolicitud: () => pedir<TipoSolicitud[]>('/api/catalogos/tipos-solicitud'),
+    actualizarOpcionCatalogo: (tipo, peticion) =>
+      pedir<void>(`/api/entidades-gubernamentales/catalogos/${tipo}`, {
+        method: 'PUT',
+        body: JSON.stringify(peticion)
+      }),
+
+    eliminarOpcionCatalogo: (tipo, valor) =>
+      pedir<void>(`/api/entidades-gubernamentales/catalogos/${tipo}?valor=${encodeURIComponent(valor)}`, {
+        method: 'DELETE'
+      }),
+
+    obtenerAreas: (soloActivas = true) =>
+      pedir<Area[]>(`/api/catalogos/areas?soloActivas=${soloActivas}`),
+
+    crearArea: (peticion) =>
+      pedir<Area>('/api/catalogos/areas', {
+        method: 'POST',
+        body: JSON.stringify(peticion)
+      }),
+
+    actualizarArea: (id, peticion) =>
+      pedir<Area>(`/api/catalogos/areas/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(peticion)
+      }),
+
+    eliminarArea: (id) =>
+      pedir<void>(`/api/catalogos/areas/${id}`, { method: 'DELETE' }),
+
+    obtenerTiposSolicitud: (soloActivos = true) =>
+      pedir<TipoSolicitud[]>(`/api/catalogos/tipos-solicitud?soloActivos=${soloActivos}`),
+
+    crearTipoSolicitud: (peticion) =>
+      pedir<TipoSolicitud>('/api/catalogos/tipos-solicitud', {
+        method: 'POST',
+        body: JSON.stringify(peticion)
+      }),
+
+    actualizarTipoSolicitud: (id, peticion) =>
+      pedir<TipoSolicitud>(`/api/catalogos/tipos-solicitud/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(peticion)
+      }),
+
+    eliminarTipoSolicitud: (id) =>
+      pedir<void>(`/api/catalogos/tipos-solicitud/${id}`, { method: 'DELETE' }),
 
     obtenerUsuarios: () => pedir<Usuario[]>('/api/usuarios'),
 

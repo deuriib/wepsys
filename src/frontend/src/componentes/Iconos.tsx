@@ -158,3 +158,12 @@ export function IconoFiltro({ className = 'h-4 w-4' }: PropiedadesIcono) {
     </svg>
   );
 }
+
+export function IconoCatalogo({ className = 'h-5 w-5' }: PropiedadesIcono) {
+  return (
+    <svg {...BASE} className={className}>
+      <path d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+      <rect x="2" y="3" width="20" height="18" rx="2" />
+    </svg>
+  );
+}

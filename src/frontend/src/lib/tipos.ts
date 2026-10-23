@@ -187,14 +187,41 @@ export interface OpcionesFiltroEntidades {
   sectores: string[];
 }
 
+export type TipoCatalogoEntidad = 'categorias' | 'sectores' | 'poderes-del-estado';
+
+export interface ActualizarOpcionCatalogo {
+  valorActual: string;
+  nuevoValor: string;
+}
+
 export interface Area {
   id: number;
   nombre: string;
   activa: boolean;
 }
 
+export interface CrearArea {
+  nombre: string;
+}
+
+export interface ActualizarArea {
+  nombre: string;
+  activa: boolean;
+}
+
 export interface TipoSolicitud {
   id: number;
+  nombre: string;
+  descripcion: string;
+  activo: boolean;
+}
+
+export interface CrearTipoSolicitud {
+  nombre: string;
+  descripcion: string;
+}
+
+export interface ActualizarTipoSolicitud {
   nombre: string;
   descripcion: string;
   activo: boolean;

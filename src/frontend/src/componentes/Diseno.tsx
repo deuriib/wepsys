@@ -92,22 +92,46 @@ export function Tarjeta({ children, className = '', titulo, descripcion, accione
 }
 
 interface PropiedadesCampo {
-  etiqueta: string;
+  etiqueta: ReactNode;
   para: string;
   children: ReactNode;
   error?: string;
   ayuda?: string;
   requerido?: boolean;
+  acciones?: ReactNode;
   className?: string;
 }
 
-export function Campo({ etiqueta, para, children, error, ayuda, requerido, className = '' }: PropiedadesCampo) {
+export function Campo({
+  etiqueta,
+  para,
+  children,
+  error,
+  ayuda,
+  requerido,
+  acciones,
+  className = ''
+}: PropiedadesCampo) {
   return (
     <div className={className}>
-      <label htmlFor={para} className="mb-1.5 block text-sm font-medium text-sb-900">
-        {etiqueta}
-        {requerido && <span className="ml-0.5 text-acento">*</span>}
-      </label>
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <label
+          htmlFor={para}
+          className="inline-flex items-center gap-1 text-sm font-medium text-sb-900"
+        >
+          <span>{etiqueta}</span>
+          {requerido && (
+            <span
+              className="text-acento font-semibold leading-none select-none"
+              aria-hidden="true"
+              title="Campo obligatorio"
+            >
+              *
+            </span>
+          )}
+        </label>
+        {acciones && <div className="text-xs">{acciones}</div>}
+      </div>
       {children}
       {error ? (
         <p id={`${para}-error`} className="mt-1.5 text-xs font-medium text-red-600">

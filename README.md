@@ -200,7 +200,7 @@ El sistema provee 3 cuentas de usuario preconfiguradas con diferentes roles para
 
 ## 🧪 Ejecución de Pruebas Automatizadas
 
-El proyecto incluye **118 pruebas automatizadas** que validan la lógica de negocio, reglas de transición de estados, seguridad de tokens JWT, persistencia concurrente en archivo plano y endpoints de integración HTTP con `WebApplicationFactory`.
+El proyecto incluye **123 pruebas automatizadas** que validan la lógica de negocio, reglas de transición de estados, seguridad de tokens JWT, persistencia concurrente en archivo plano, el contrato RFC 9457 de errores y endpoints de integración HTTP con `WebApplicationFactory`.
 
 Para ejecutar la suite completa de pruebas:
 
@@ -210,7 +210,7 @@ dotnet test src/backend/SB.GestionSolicitudes.sln
 
 Resultado esperado:
 ```text
-Passed!  - Failed: 0, Passed: 118, Skipped: 0, Total: 118
+Passed!  - Failed: 0, Passed: 123, Skipped: 0, Total: 123
 ```
 
 ---

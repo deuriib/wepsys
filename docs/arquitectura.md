@@ -38,13 +38,13 @@ graph TD
 
 4. **`SB.GestionSolicitudes.Servicios`** (Punto de Entrada Web API)
    - Controladores RESTful (`SolicitudesController`, `EntidadesGubernamentalesController`, `AutenticacionController`, `DashboardController`, `CatalogosController`, `UsuariosController`).
-   - Middleware global de manejo de excepciones (`ManejadorExcepcionesMiddleware`) que estandariza respuestas de error bajo RFC 7807 (Problem Details).
+   - Manejador global de excepciones (`ManejadorExcepciones`, `IExceptionHandler`) y páginas de código de estado que devuelven `application/problem+json` conforme a **RFC 9457** (Problem Details), con los miembros de extensión `codigo` (código de negocio estable) y `trazabilidad` (correlación con los logs y la cabecera `X-Trace-Id`).
    - Documentación dual con **Swagger / OpenAPI** en `/swagger` y **Scalar** en `/docs/v1`.
    - Pipeline de logging estructurado con **Serilog** a consola y archivos rotativos (`logs/sb-gestion-solicitudes-.log`).
    - Health check en `/salud`.
 
 5. **`SB.GestionSolicitudes.Pruebas`**
-   - 118 pruebas automatizadas: pruebas unitarias de dominio, repositorios, servicios de aplicación y pruebas de integración con `WebApplicationFactory` simulando requests HTTP reales.
+   - 123 pruebas automatizadas: pruebas unitarias de dominio, repositorios, servicios de aplicación y pruebas de integración con `WebApplicationFactory` simulando requests HTTP reales.
 
 ---
 

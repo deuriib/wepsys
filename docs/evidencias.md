@@ -6,7 +6,7 @@ Este documento certifica el cumplimiento funcional y técnico de la solución de
 
 ## 1. Validación de Pruebas Automatizadas
 
-El proyecto cuenta con **118 pruebas automatizadas** entre pruebas unitarias (de dominio, servicios, seguridad y repositorio plano) y pruebas de integración sobre endpoints HTTP reales utilizando `WebApplicationFactory<Program>`.
+El proyecto cuenta con **123 pruebas automatizadas** entre pruebas unitarias (de dominio, servicios, seguridad y repositorio plano) y pruebas de integración sobre endpoints HTTP reales utilizando `WebApplicationFactory<Program>`.
 
 ### Resultado de Ejecución de Pruebas
 ```text
@@ -16,7 +16,7 @@ VSTest version 17.11.1 (x64)
 Starting test execution, please wait...
 A total of 1 test files matched the specified pattern.
 
-Passed!  - Failed:     0, Passed:   118, Skipped:     0, Total:   118, Duration: 12 s - SB.GestionSolicitudes.Pruebas.dll (net8.0)
+Passed!  - Failed:     0, Passed:   123, Skipped:     0, Total:   123, Duration: 18 s - SB.GestionSolicitudes.Pruebas.dll (net8.0)
 ```
 
 ---

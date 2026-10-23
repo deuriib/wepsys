@@ -93,7 +93,7 @@ export function IniciarSesion() {
         <img
           src={logo}
           alt="Superintendencia de Bancos de la República Dominicana"
-          className="h-24 w-auto brightness-0 invert"
+          className="h-32 w-auto brightness-0 invert"
         />
 
         <div className="relative max-w-lg">
@@ -136,7 +136,7 @@ export function IniciarSesion() {
             <img
               src={logo}
               alt="Superintendencia de Bancos"
-              className="h-16 w-auto"
+              className="h-24 w-auto"
             />
           </div>
 

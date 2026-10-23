@@ -101,6 +101,12 @@ mise run setup
 
 Las tareas Docker que utilizan Compose requieren un archivo `.env` creado a partir de `.env.example`. `mise tasks` muestra las tareas disponibles. También se pueden seguir usando directamente los comandos documentados en las secciones siguientes.
 
+## Integración Continua
+
+El flujo de trabajo de GitHub Actions en `.github/workflows/ci.yml` se ejecuta para pull requests dirigidos a `main`, pushes a `main` y ejecuciones manuales. Las pruebas del backend y la compilación de producción del frontend se ejecutan en paralelo; después de que ambas pasan, CI compila las imágenes de contenedor de producción de la API y la web sin publicarlas.
+
+Las pruebas de integración del backend inician su propio SQL Server mediante Testcontainers, por lo que el runner de Ubuntu hospedado necesita Docker pero no requiere secretos del repositorio ni una base de datos configurada. Las pull requests también ejecutan la revisión de dependencias de GitHub y fallan cuando las dependencias modificadas introducen avisos de severidad alta o crítica.
+
 ---
 
 ## ⚙️ Instrucciones de Ejecución

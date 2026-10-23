@@ -114,7 +114,7 @@ export function BarraLateral({ abierta, onCerrar }: PropiedadesBarraLateral) {
 
       <aside
         className={[
-          'fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col bg-gradient-to-b from-sb-700 via-sb-800 to-sb-900 lg:bg-none',
+          'fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col bg-sb-800/90',
           'transition-transform duration-200 lg:translate-x-0',
           abierta ? 'translate-x-0' : '-translate-x-full'
         ].join(' ')}

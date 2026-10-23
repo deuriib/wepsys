@@ -17,16 +17,20 @@ import { Paginacion } from '../componentes/Paginacion';
 import { ErrorApi } from '../lib/api';
 import {
   useActualizarEntidadMutation,
+  useActualizarOpcionCatalogoMutation,
   useConsultarEntidades,
   useCrearEntidadMutation,
+  useCrearOpcionCatalogoMutation,
   useEliminarEntidadMutation,
+  useEliminarOpcionCatalogoMutation,
   useOpcionesEntidades
 } from '../lib/consultas';
 import { formatearFecha } from '../lib/formato';
 import type {
   CrearEntidad,
   EntidadGubernamental,
-  OpcionesFiltroEntidades
+  OpcionesFiltroEntidades,
+  TipoCatalogoEntidad
 } from '../lib/tipos';
 import { useSesion } from '../sesion/ContextoSesion';
 
@@ -86,6 +90,9 @@ function ModalEntidad({
       : FORMULARIO_VACIO
   );
   const [errores, setErrores] = useState<Record<string, string>>({});
+  const [customCat, setCustomCat] = useState(false);
+  const [customPoder, setCustomPoder] = useState(false);
+  const [customSector, setCustomSector] = useState(false);
 
   const actualizar = <C extends keyof CrearEntidad>(campo: C, valor: CrearEntidad[C]) => {
     setFormulario((actual) => ({ ...actual, [campo]: valor }));
@@ -108,16 +115,16 @@ function ModalEntidad({
       nuevos.nombre = 'El nombre debe tener al menos 3 caracteres.';
     }
 
-    if (formulario.categoria.trim().length < 3) {
-      nuevos.categoria = 'La categoría debe tener al menos 3 caracteres.';
+    if (!formulario.categoria.trim()) {
+      nuevos.categoria = 'Debe seleccionar o indicar una categoría.';
     }
 
-    if (formulario.poderDelEstado.trim().length < 3) {
-      nuevos.poderDelEstado = 'Indique el poder del estado.';
+    if (!formulario.poderDelEstado.trim()) {
+      nuevos.poderDelEstado = 'Debe seleccionar o indicar el poder del estado.';
     }
 
-    if (formulario.sector.trim().length < 2) {
-      nuevos.sector = 'Indique el sector.';
+    if (!formulario.sector.trim()) {
+      nuevos.sector = 'Debe seleccionar o indicar un sector.';
     }
 
     setErrores(nuevos);
@@ -179,54 +186,138 @@ function ModalEntidad({
         </Campo>
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <Campo etiqueta="Categoría" para="entidad-categoria" requerido error={errores.categoria}>
-            <Entrada
-              id="entidad-categoria"
-              value={formulario.categoria}
-              onChange={(evento) => actualizar('categoria', evento.target.value)}
-              maxLength={120}
-              list="lista-categorias"
-              placeholder="Organismo Autónomo"
-            />
-            <datalist id="lista-categorias">
-              {opciones?.categorias.map((categoria) => (
-                <option key={categoria} value={categoria} />
-              ))}
-            </datalist>
+          <Campo
+            etiqueta="Categoría"
+            acciones={
+              <button
+                type="button"
+                onClick={() => setCustomCat(!customCat)}
+                className="text-xs font-normal text-acento hover:underline"
+              >
+                {customCat ? 'Elegir de lista' : '+ Nueva opción'}
+              </button>
+            }
+            para="entidad-categoria"
+            requerido
+            error={errores.categoria}
+          >
+            {customCat ? (
+              <Entrada
+                id="entidad-categoria"
+                value={formulario.categoria}
+                onChange={(evento) => actualizar('categoria', evento.target.value)}
+                maxLength={120}
+                placeholder="Escriba nueva categoría..."
+                autoFocus
+              />
+            ) : (
+              <Seleccion
+                id="entidad-categoria"
+                value={formulario.categoria}
+                onChange={(evento) => actualizar('categoria', evento.target.value)}
+                disabled={!opciones}
+              >
+                <option value="">— Seleccione una categoría —</option>
+                {opciones?.categorias.map((categoria) => (
+                  <option key={categoria} value={categoria}>
+                    {categoria}
+                  </option>
+                ))}
+                {formulario.categoria && !opciones?.categorias.includes(formulario.categoria) && (
+                  <option value={formulario.categoria}>{formulario.categoria}</option>
+                )}
+              </Seleccion>
+            )}
           </Campo>
 
-          <Campo etiqueta="Poder del estado" para="entidad-poder" requerido error={errores.poderDelEstado}>
-            <Entrada
-              id="entidad-poder"
-              value={formulario.poderDelEstado}
-              onChange={(evento) => actualizar('poderDelEstado', evento.target.value)}
-              maxLength={80}
-              list="lista-poderes"
-              placeholder="Poder Ejecutivo"
-            />
-            <datalist id="lista-poderes">
-              {opciones?.poderesDelEstado.map((poder) => (
-                <option key={poder} value={poder} />
-              ))}
-            </datalist>
+          <Campo
+            etiqueta="Poder del estado"
+            acciones={
+              <button
+                type="button"
+                onClick={() => setCustomPoder(!customPoder)}
+                className="text-xs font-normal text-acento hover:underline"
+              >
+                {customPoder ? 'Elegir de lista' : '+ Nueva opción'}
+              </button>
+            }
+            para="entidad-poder"
+            requerido
+            error={errores.poderDelEstado}
+          >
+            {customPoder ? (
+              <Entrada
+                id="entidad-poder"
+                value={formulario.poderDelEstado}
+                onChange={(evento) => actualizar('poderDelEstado', evento.target.value)}
+                maxLength={80}
+                placeholder="Escriba nuevo poder..."
+                autoFocus
+              />
+            ) : (
+              <Seleccion
+                id="entidad-poder"
+                value={formulario.poderDelEstado}
+                onChange={(evento) => actualizar('poderDelEstado', evento.target.value)}
+                disabled={!opciones}
+              >
+                <option value="">— Seleccione el poder —</option>
+                {opciones?.poderesDelEstado.map((poder) => (
+                  <option key={poder} value={poder}>
+                    {poder}
+                  </option>
+                ))}
+                {formulario.poderDelEstado && !opciones?.poderesDelEstado.includes(formulario.poderDelEstado) && (
+                  <option value={formulario.poderDelEstado}>{formulario.poderDelEstado}</option>
+                )}
+              </Seleccion>
+            )}
           </Campo>
         </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <Campo etiqueta="Sector" para="entidad-sector" requerido error={errores.sector}>
-            <Entrada
-              id="entidad-sector"
-              value={formulario.sector}
-              onChange={(evento) => actualizar('sector', evento.target.value)}
-              maxLength={120}
-              list="lista-sectores"
-              placeholder="Finanzas"
-            />
-            <datalist id="lista-sectores">
-              {opciones?.sectores.map((sector) => (
-                <option key={sector} value={sector} />
-              ))}
-            </datalist>
+          <Campo
+            etiqueta="Sector"
+            acciones={
+              <button
+                type="button"
+                onClick={() => setCustomSector(!customSector)}
+                className="text-xs font-normal text-acento hover:underline"
+              >
+                {customSector ? 'Elegir de lista' : '+ Nueva opción'}
+              </button>
+            }
+            para="entidad-sector"
+            requerido
+            error={errores.sector}
+          >
+            {customSector ? (
+              <Entrada
+                id="entidad-sector"
+                value={formulario.sector}
+                onChange={(evento) => actualizar('sector', evento.target.value)}
+                maxLength={120}
+                placeholder="Escriba nuevo sector..."
+                autoFocus
+              />
+            ) : (
+              <Seleccion
+                id="entidad-sector"
+                value={formulario.sector}
+                onChange={(evento) => actualizar('sector', evento.target.value)}
+                disabled={!opciones}
+              >
+                <option value="">— Seleccione un sector —</option>
+                {opciones?.sectores.map((sector) => (
+                  <option key={sector} value={sector}>
+                    {sector}
+                  </option>
+                ))}
+                {formulario.sector && !opciones?.sectores.includes(formulario.sector) && (
+                  <option value={formulario.sector}>{formulario.sector}</option>
+                )}
+              </Seleccion>
+            )}
           </Campo>
 
           <Campo etiqueta="Estado" para="entidad-activa">
@@ -247,6 +338,230 @@ function ModalEntidad({
   );
 }
 
+interface PropiedadesModalGestionCatalogos {
+  abierta: boolean;
+  opciones: OpcionesFiltroEntidades | null;
+  onCerrar: () => void;
+  onAviso: (mensaje: string) => void;
+}
+
+function ModalGestionCatalogos({
+  abierta,
+  opciones,
+  onCerrar,
+  onAviso
+}: PropiedadesModalGestionCatalogos) {
+  const [tipoActivo, setTipoActivo] = useState<TipoCatalogoEntidad>('categorias');
+  const [nuevoValor, setNuevoValor] = useState('');
+  const [editando, setEditando] = useState<{ original: string; nuevo: string } | null>(null);
+  const [porEliminar, setPorEliminar] = useState<string | null>(null);
+  const [errorLocal, setErrorLocal] = useState<string | null>(null);
+
+  const mutacionCrear = useCrearOpcionCatalogoMutation();
+  const mutacionActualizar = useActualizarOpcionCatalogoMutation();
+  const mutacionEliminar = useEliminarOpcionCatalogoMutation();
+
+  const items =
+    tipoActivo === 'categorias'
+      ? opciones?.categorias ?? []
+      : tipoActivo === 'poderes-del-estado'
+      ? opciones?.poderesDelEstado ?? []
+      : opciones?.sectores ?? [];
+
+  const etiquetaTipo =
+    tipoActivo === 'categorias'
+      ? 'Categoría'
+      : tipoActivo === 'poderes-del-estado'
+      ? 'Poder del Estado'
+      : 'Sector';
+
+  const agregar = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!nuevoValor.trim() || nuevoValor.trim().length < 2) {
+      setErrorLocal('El valor debe tener al menos 2 caracteres.');
+      return;
+    }
+    setErrorLocal(null);
+    try {
+      await mutacionCrear.mutateAsync({ tipo: tipoActivo, valor: nuevoValor.trim() });
+      setNuevoValor('');
+      onAviso(`${etiquetaTipo} agregada correctamente.`);
+    } catch (err) {
+      setErrorLocal(err instanceof ErrorApi ? err.message : 'No fue posible agregar el elemento.');
+    }
+  };
+
+  const guardarEdicion = async () => {
+    if (!editando || !editando.nuevo.trim() || editando.nuevo.trim().length < 2) {
+      setErrorLocal('El nuevo valor debe tener al menos 2 caracteres.');
+      return;
+    }
+    setErrorLocal(null);
+    try {
+      await mutacionActualizar.mutateAsync({
+        tipo: tipoActivo,
+        peticion: { valorActual: editando.original, nuevoValor: editando.nuevo.trim() }
+      });
+      setEditando(null);
+      onAviso(`${etiquetaTipo} actualizada correctamente.`);
+    } catch (err) {
+      setErrorLocal(err instanceof ErrorApi ? err.message : 'No fue posible actualizar el elemento.');
+    }
+  };
+
+  const confirmarEliminar = async () => {
+    if (!porEliminar) return;
+    setErrorLocal(null);
+    try {
+      await mutacionEliminar.mutateAsync({ tipo: tipoActivo, valor: porEliminar });
+      setPorEliminar(null);
+      onAviso(`${etiquetaTipo} eliminada correctamente.`);
+    } catch (err) {
+      setErrorLocal(err instanceof ErrorApi ? err.message : 'No fue posible eliminar el elemento.');
+      setPorEliminar(null);
+    }
+  };
+
+  return (
+    <Modal
+      abierto={abierta}
+      titulo="Gestión de catálogos de entidades"
+      descripcion="Administre las opciones de los dropdowns (Categorías, Poderes y Sectores)."
+      onCerrar={onCerrar}
+      ancho="amplio"
+      pie={
+        <Boton variante="secundario" type="button" onClick={onCerrar}>
+          Cerrar
+        </Boton>
+      }
+    >
+      <div className="space-y-4">
+        {errorLocal && <Alerta tono="error">{errorLocal}</Alerta>}
+
+        <div className="flex border-b border-slate-200">
+          {(
+            [
+              { id: 'categorias', etiqueta: 'Categorías', count: opciones?.categorias.length ?? 0 },
+              { id: 'poderes-del-estado', etiqueta: 'Poderes del Estado', count: opciones?.poderesDelEstado.length ?? 0 },
+              { id: 'sectores', etiqueta: 'Sectores', count: opciones?.sectores.length ?? 0 }
+            ] as const
+          ).map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => {
+                setTipoActivo(tab.id);
+                setEditando(null);
+                setErrorLocal(null);
+              }}
+              className={`flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-medium transition ${
+                tipoActivo === tab.id
+                  ? 'border-acento text-acento font-semibold'
+                  : 'border-transparent text-slate-500 hover:text-slate-800'
+              }`}
+            >
+              <span>{tab.etiqueta}</span>
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-600">
+                {tab.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={agregar} className="flex gap-2">
+          <Entrada
+            value={nuevoValor}
+            onChange={(e) => setNuevoValor(e.target.value)}
+            placeholder={`Nueva ${etiquetaTipo.toLowerCase()}...`}
+            maxLength={120}
+          />
+          <Boton type="submit" cargando={mutacionCrear.isPending} className="shrink-0">
+            Agregar
+          </Boton>
+        </form>
+
+        <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
+          {items.length === 0 ? (
+            <div className="p-4 text-center text-sm text-slate-400">No hay elementos registrados.</div>
+          ) : (
+            items.map((item) => (
+              <div key={item} className="flex items-center justify-between p-3 transition hover:bg-slate-50">
+                {editando?.original === item ? (
+                  <div className="flex flex-1 items-center gap-2">
+                    <Entrada
+                      value={editando.nuevo}
+                      onChange={(e) => setEditando({ ...editando, nuevo: e.target.value })}
+                      className="py-1 text-sm"
+                      maxLength={120}
+                      autoFocus
+                    />
+                    <Boton tamano="sm" onClick={guardarEdicion} cargando={mutacionActualizar.isPending}>
+                      Guardar
+                    </Boton>
+                    <Boton tamano="sm" variante="secundario" onClick={() => setEditando(null)}>
+                      Cancelar
+                    </Boton>
+                  </div>
+                ) : (
+                  <>
+                    <span className="text-sm font-medium text-sb-900">{item}</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setEditando({ original: item, nuevo: item })}
+                        className="rounded p-1 text-slate-400 hover:text-sb-800"
+                        title="Renombrar en todo el catálogo"
+                      >
+                        <IconoEditar className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPorEliminar(item)}
+                        className="rounded p-1 text-slate-400 hover:text-red-600"
+                        title="Eliminar de las opciones"
+                      >
+                        <IconoBasura className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+
+        {porEliminar && (
+          <Modal
+            abierto={Boolean(porEliminar)}
+            titulo={`Eliminar ${etiquetaTipo.toLowerCase()}`}
+            descripcion="Esta acción retirará la opción del catálogo."
+            onCerrar={() => setPorEliminar(null)}
+            pie={
+              <>
+                <Boton variante="secundario" type="button" onClick={() => setPorEliminar(null)}>
+                  Cancelar
+                </Boton>
+                <Boton
+                  variante="peligro"
+                  type="button"
+                  cargando={mutacionEliminar.isPending}
+                  onClick={confirmarEliminar}
+                >
+                  Eliminar definitivamente
+                </Boton>
+              </>
+            }
+          >
+            <p className="text-sm text-slate-600">
+              ¿Está seguro de que desea eliminar <strong className="text-sb-900">{porEliminar}</strong> de las opciones?
+            </p>
+          </Modal>
+        )}
+      </div>
+    </Modal>
+  );
+}
+
 export function Entidades() {
   const { usuario } = useSesion();
   const esAdministrador = usuario?.rol === 'Administrador';
@@ -255,6 +570,7 @@ export function Entidades() {
   const [pagina, setPagina] = useState(1);
   const [aviso, setAviso] = useState<string | null>(null);
   const [modal, setModal] = useState<{ entidad: EntidadGubernamental | null } | null>(null);
+  const [modalCatalogos, setModalCatalogos] = useState(false);
   const [porEliminar, setPorEliminar] = useState<EntidadGubernamental | null>(null);
 
   const { data: opciones = null } = useOpcionesEntidades();
@@ -320,9 +636,14 @@ export function Entidades() {
           {hayFiltros ? ' filtrados' : ' en total'}.
         </p>
         {esAdministrador && (
-          <Boton className="shrink-0" onClick={() => setModal({ entidad: null })}>
-            Nueva entidad
-          </Boton>
+          <div className="flex items-center gap-2">
+            <Boton variante="secundario" className="shrink-0" onClick={() => setModalCatalogos(true)}>
+              Gestionar catálogos
+            </Boton>
+            <Boton className="shrink-0" onClick={() => setModal({ entidad: null })}>
+              Nueva entidad
+            </Boton>
+          </div>
         )}
       </div>
 
@@ -553,6 +874,15 @@ export function Entidades() {
                 setAviso(mensaje);
               }}
               onError={(mensaje) => setAviso(mensaje)}
+            />
+          )}
+
+          {modalCatalogos && (
+            <ModalGestionCatalogos
+              abierta={modalCatalogos}
+              opciones={opciones}
+              onCerrar={() => setModalCatalogos(false)}
+              onAviso={(mensaje) => setAviso(mensaje)}
             />
           )}
 

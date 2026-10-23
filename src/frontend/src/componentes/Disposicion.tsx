@@ -16,7 +16,7 @@ export function Disposicion() {
       {/* Marco navy continuo: sidebar y encabezado comparten esta capa fija. */}
       <div
         aria-hidden="true"
-        className="fixed inset-0 -z-10 bg-gradient-to-b from-sb-700 via-sb-800 to-sb-900"
+        className="fixed inset-0 -z-10 bg-sb-800/90"
       />
 
       <BarraLateral abierta={menuAbierto} onCerrar={() => setMenuAbierto(false)} />

@@ -359,7 +359,7 @@ public sealed class SolicitudesPruebas
             new { texto = "Añado el identificador del equipo afectado.", visibilidad = "Interna" },
             OPCIONES_JSON);
 
-        respuesta.StatusCode.ShouldBe(HttpStatusCode.OK);
+        respuesta.StatusCode.ShouldBe(HttpStatusCode.Created);
 
         var detalle = await respuesta.LeerComoAsync<DetallePrueba>();
         var comentario = detalle!.Comentarios.Single(item => item.Texto.StartsWith("Añado", StringComparison.Ordinal));
@@ -377,7 +377,7 @@ public sealed class SolicitudesPruebas
             $"/api/solicitudes/{id}/comentarios",
             new { texto = "Nota interna: revisar la configuración del servidor.", visibilidad = "Interna" },
             OPCIONES_JSON);
-        comentarioInterno.StatusCode.ShouldBe(HttpStatusCode.OK);
+        comentarioInterno.StatusCode.ShouldBe(HttpStatusCode.Created);
 
         var solicitante = await fabrica.ClienteSolicitanteAsync();
         var detalle = await solicitante.GetFromJsonAsync<DetallePrueba>($"/api/solicitudes/{id}", OPCIONES_JSON);

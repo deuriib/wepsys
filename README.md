@@ -1,5 +1,7 @@
 # SB · Plataforma de Gestión de Solicitudes Internas y Entidades Gubernamentales
 
+[![Continuous Integration](https://github.com/deuriib/wepsys/actions/workflows/ci.yml/badge.svg)](https://github.com/deuriib/wepsys/actions/workflows/ci.yml)
+
 Solución integral Full Stack desarrollada para la **Superintendencia de Bancos de la República Dominicana (SB)** según las especificaciones técnicas requeridas.
 
 La plataforma implementa un sistema empresarial para registrar, dar seguimiento, clasificar y auditar solicitudes internas de servicios tecnológicos, acompañado de un mantenimiento completo para el catálogo oficial de entidades gubernamentales de la República Dominicana, persistido en archivo de texto plano.

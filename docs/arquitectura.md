@@ -44,7 +44,7 @@ graph TD
    - Health check en `/salud`.
 
 5. **`SB.GestionSolicitudes.Pruebas`**
-   - 123 pruebas automatizadas: pruebas unitarias de dominio, repositorios, servicios de aplicación y pruebas de integración con `WebApplicationFactory` simulando requests HTTP reales.
+   - 146 pruebas automatizadas: pruebas unitarias de dominio, repositorios, servicios de aplicación y pruebas de integración con `WebApplicationFactory` simulando requests HTTP reales.
 
 ---
 

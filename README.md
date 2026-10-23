@@ -50,7 +50,7 @@ La plataforma implementa un sistema empresarial para registrar, dar seguimiento,
 │   │   ├── SB.GestionSolicitudes.Infraestructura/ # EF Core, Archivo plano, Seguridad, Canales
 │   │   ├── SB.GestionSolicitudes.Servicios/ # ASP.NET Core Web API, Middlewares, Controllers
 │   │   │   └── Dockerfile                   # Imagen multi-etapa del API (runtime, pruebas, desarrollo)
-│   │   └── SB.GestionSolicitudes.Pruebas/   # Suite de 144 Pruebas Unitarias e Integración
+│   │   └── SB.GestionSolicitudes.Pruebas/   # Suite de 146 Pruebas Unitarias e Integración
 │   └── frontend/                            # Aplicación React + TypeScript + Vite + Tailwind
 │       ├── Dockerfile                       # Imagen multi-etapa (build, desarrollo, nginx)
 │       └── nginx.conf                       # Servidor estático + proxy hacia el API
@@ -214,7 +214,7 @@ docker compose -f compose.yaml -f compose.dev.yaml up --build
 docker compose -f compose.test.yaml run --rm pruebas
 ```
 
-La etapa `pruebas` del Dockerfile compila y ejecuta los 127 tests con el SDK oficial; el código de salida del contenedor es el de `dotnet test`. La composición levanta además su propia instancia de SQL Server y le pasa al runner la cadena de conexión en `ConnectionStrings__BaseDatosPruebas`, de modo que cada prueba de integración crea su base desechable y la borra al terminar. El contenedor de la base queda arriba para la siguiente corrida; se retira con `docker compose -f compose.test.yaml down`.
+La etapa `pruebas` del Dockerfile compila y ejecuta los 146 tests con el SDK oficial; el código de salida del contenedor es el de `dotnet test`. La composición levanta además su propia instancia de SQL Server y le pasa al runner la cadena de conexión en `ConnectionStrings__BaseDatosPruebas`, de modo que cada prueba de integración crea su base desechable y la borra al terminar. El contenedor de la base queda arriba para la siguiente corrida; se retira con `docker compose -f compose.test.yaml down`.
 
 ---
 
@@ -253,7 +253,7 @@ El sistema provee 3 cuentas de usuario preconfiguradas con diferentes roles para
 
 ## 🧪 Ejecución de Pruebas Automatizadas
 
-El proyecto incluye **127 pruebas automatizadas** que validan la lógica de negocio, reglas de transición de estados, seguridad de tokens JWT, persistencia concurrente en archivo plano, el contrato RFC 9457 de errores y endpoints de integración HTTP con `WebApplicationFactory`.
+El proyecto incluye **146 pruebas automatizadas** que validan la lógica de negocio, reglas de transición de estados, seguridad de tokens JWT, persistencia concurrente en archivo plano, el contrato RFC 9457 de errores y endpoints de integración HTTP con `WebApplicationFactory`.
 
 Para ejecutar la suite completa de pruebas:
 
@@ -263,7 +263,7 @@ dotnet test src/backend/SB.GestionSolicitudes.sln
 
 Resultado esperado:
 ```text
-Passed!  - Failed: 0, Passed: 127, Skipped: 0, Total: 127
+Passed!  - Failed: 0, Passed: 146, Skipped: 0, Total: 146
 ```
 
 ### Pruebas de integración contra SQL Server

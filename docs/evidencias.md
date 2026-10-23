@@ -6,7 +6,7 @@ Este documento certifica el cumplimiento funcional y técnico de la solución de
 
 ## 1. Validación de Pruebas Automatizadas
 
-El proyecto cuenta con **127 pruebas automatizadas** entre pruebas unitarias (de dominio, servicios, seguridad y repositorio plano) y pruebas de integración sobre endpoints HTTP reales utilizando `WebApplicationFactory<Program>`.
+El proyecto cuenta con **146 pruebas automatizadas** entre pruebas unitarias (de dominio, servicios, seguridad y repositorio plano) y pruebas de integración sobre endpoints HTTP reales utilizando `WebApplicationFactory<Program>`.
 
 Las pruebas de integración corren contra **SQL Server 2022** real: **Testcontainers** levanta un contenedor efímero por corrida (`mcr.microsoft.com/mssql/server:2022-latest`) y cada prueba crea su propia base desechable `SbPruebas_<guid>`, que elimina al terminar. El único requisito es tener Docker en ejecución.
 
@@ -25,7 +25,7 @@ VSTest version 17.11.1 (x64)
 Starting test execution, please wait...
 A total of 1 test files matched the specified pattern.
 
-Passed!  - Failed:     0, Passed:   127, Skipped:     0, Total:   127, Duration: 2 m 48 s - SB.GestionSolicitudes.Pruebas.dll (net8.0)
+Passed!  - Failed:     0, Passed:   146, Skipped:     0, Total:   146, Duration: 2 m 30 s - SB.GestionSolicitudes.Pruebas.dll (net8.0)
 ```
 
 La duración incluye crear, migrar, sembrar y eliminar 53 bases de datos sobre el contenedor de SQL Server; al terminar, el contenedor desaparece (lo retira Ryuk) y no queda ninguna base `SbPruebas_*` en la instancia.

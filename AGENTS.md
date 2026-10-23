@@ -25,7 +25,7 @@ in a flat-file JSON store (as required by the technical specification).
 | **Flat-file DB**  | `database/entidades-gubernamentales.json` (async semaphore-guarded) |
 | **Logging**       | Serilog (console + rolling file)                           |
 | **API Docs**      | Scalar (`/docs/v1`) + Swagger UI (`/swagger`)              |
-| **Tests**         | 144 automated tests (unit + integration via Testcontainers) |
+| **Tests**         | 146 automated tests (unit + integration via Testcontainers) |
 | **CI**            | GitHub Actions — `.github/workflows/ci.yml`                |
 | **Task runner**   | [mise](https://mise.jdx.dev/) — `mise.toml`               |
 
@@ -50,7 +50,7 @@ in a flat-file JSON store (as required by the technical specification).
 │   │   ├── SB.GestionSolicitudes.Aplicacion/      # Layer 2 — Use cases, DTOs, Interfaces
 │   │   ├── SB.GestionSolicitudes.Infraestructura/ # Layer 3 — EF Core, Flat-file, JWT, Notifications
 │   │   ├── SB.GestionSolicitudes.Servicios/       # Layer 4 — ASP.NET Core API, Controllers, Middleware
-│   │   └── SB.GestionSolicitudes.Pruebas/         # Test suite (144 tests)
+│   │   └── SB.GestionSolicitudes.Pruebas/         # Test suite (146 tests)
 │   └── frontend/                            # React + TypeScript SPA
 │       ├── src/
 │       ├── Dockerfile
@@ -301,7 +301,7 @@ dotnet ef migrations add <MigrationName> \
 
 ## 12. Testing
 
-- **Suite**: 144 tests — unit and integration.
+- **Suite**: 146 tests — unit and integration.
 - **Integration tests**: spin up a disposable SQL Server instance via **Testcontainers**. Requires Docker to be running.
 - **Run everything**:
 
@@ -309,7 +309,7 @@ dotnet ef migrations add <MigrationName> \
   dotnet test src/backend/SB.GestionSolicitudes.sln
   ```
 
-- **Expected result**: `Failed: 0, Passed: 144, Skipped: 0, Total: 144`
+- **Expected result**: `Failed: 0, Passed: 146, Skipped: 0, Total: 146`
 - **In a container**:
 
   ```bash
@@ -328,7 +328,7 @@ Triggers: `push` to `main`, `pull_request` targeting `main`, manual dispatch.
 
 | Job                  | What it validates                                                |
 | :------------------- | :--------------------------------------------------------------- |
-| `backend-tests`      | `dotnet test` — all 144 tests; integration tests use a SQL Server service container in CI (no Docker socket required on the runner) |
+| `backend-tests`      | `dotnet test` — all 146 tests; integration tests use a SQL Server service container in CI (no Docker socket required on the runner) |
 | `frontend-build`     | `tsc --noEmit && vite build` — type-safe production build       |
 | `container-build`    | Multi-stage Docker builds for API and web (runs after both pass)|
 | `dependency-review`  | Fails on high/critical severity dependency changes (PRs only)   |
@@ -380,7 +380,7 @@ Before making any code change:
 - [ ] Read this file in full.
 - [ ] Read `docs/arquitectura.md` to understand pattern decisions.
 - [ ] Run `mise install && mise run setup` to verify the toolchain.
-- [ ] Confirm `dotnet test` passes (144/144) with Docker running (Testcontainers) or `ConnectionStrings__BaseDatosPruebas` set.
+- [ ] Confirm `dotnet test` passes (146/146) with Docker running (Testcontainers) or `ConnectionStrings__BaseDatosPruebas` set.
 - [ ] Check `.env.example` to understand required variables.
 - [ ] Identify the correct Onion layer for your change — do not cross layer boundaries.
 - [ ] Verify your change does not introduce a dependency violation (inner → outer).
